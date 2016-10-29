@@ -1,16 +1,12 @@
 package controllers;
 
-import models.ExistingPerson;
 import play.mvc.*;
 import play.db.jpa.*;
 import views.html.*;
-import models.Person;
 import play.data.FormFactory;
 import javax.inject.Inject;
 import java.sql.*;
 import java.util.*;
-
-import static play.libs.Json.*;
 
 public class Application extends Controller {
 
