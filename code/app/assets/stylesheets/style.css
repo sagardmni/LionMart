@@ -1,0 +1,10 @@
+.centerBoldText{
+    text-align: center;
+    font-weight: bold;
+}
+
+.image{
+    margin: auto;
+    width:304px;
+    height:228px;
+}
