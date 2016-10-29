@@ -8,7 +8,7 @@ import models.Person;
 import play.data.FormFactory;
 import javax.inject.Inject;
 import java.sql.*;
-import java.util.List;
+import java.util.*;
 
 import static play.libs.Json.*;
 
@@ -29,10 +29,41 @@ public class Application extends Controller {
     }
 
     public Result loginSuccess() {
-        return ok(loginSuccess.render());
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://localhost:3306/users";
+        int i=0;
+        List<String> name_list = new ArrayList<>();
+        List<String> location_list = new ArrayList<>();
+        List<String> image_list = new ArrayList<>();
+        List<Integer> cost_list = new ArrayList<>();
+        List<Integer> years_list = new ArrayList<>();
+        try {
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "root", "1234");
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM item_table");
+            while(rs.next()) {
+                name_list.add(rs.getString("name"));
+                location_list.add(rs.getString("location"));
+                cost_list.add(rs.getInt("cost"));
+                years_list.add(rs.getInt("years"));
+                image_list.add("images/"+rs.getString("image_name"));
+                i++;
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ok(loginSuccess.render(name_list,location_list,cost_list,years_list,image_list));
     }
 
-    @Transactional
+    public Result contactSeller() {
+        return ok(contact.render());
+    }
+
+        @Transactional
     public Result addPerson() throws ClassNotFoundException {
         Person person = formFactory.form(Person.class).bindFromRequest().get();
         boolean emailFormatCheckResult = checkEmailFormat(person.email);

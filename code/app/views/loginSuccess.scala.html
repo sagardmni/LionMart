@@ -1,3 +1,37 @@
+@(name_list: List[String], location_list: List[String], cost_list: List[Integer], years_list: List[Integer], image_list: List[String])
 @main("Login successful"){
-    <h1 style="text-align: center">LOGIN SUCCESSFUL</h1>
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
+    <h1 class="centerBoldText">Welcome to LionMart</h1>
+    <div style="border: 1px solid black">
+        <table align="center" style="width:40%">
+            <tbody>
+                @for(i <- 0 until Seq(name_list, location_list, cost_list, years_list,image_list).map(_.length).max){
+                <tr>
+                    <td class="image" rowspan="5"><img src='@routes.Assets.at(image_list(i))' alt="chair"></td>
+                    <td style="font-weight:bold;font-size:20px">@name_list(i)</td>
+                </tr>
+                <tr>
+                    <td><b>Pick up from: </b> @location_list(i)</td>
+                </tr>
+                <tr>
+                    <td><b>Used for: </b> @years_list(i) years</td>
+                </tr>
+                <tr>
+                    <td><b>Price: </b>$@cost_list(i)</td>
+                </tr>
+                <tr>
+                    <td>
+                        <form method="POST" action="@routes.Application.contactSeller()">
+                            <button>Contact Seller</button>
+                        </form>
+                    </td>
+                </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+    <footer class="centerBoldText" style="font-size:20px">
+        <p>LionMart</p>
+    </footer>
 }

@@ -9,6 +9,7 @@ GET     /login                      controllers.Application.login()
 POST     /loginSubmit               controllers.Application.loginSubmit()
 GET     /loginSuccess               controllers.Application.loginSuccess()
 GET     /loginFail                  controllers.Application.loginFail()
+POST    /contact                    controllers.Application.contactSeller()
 
 
 # Map static resources from the /public folder to the /assets URL path
