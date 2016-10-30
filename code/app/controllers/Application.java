@@ -7,6 +7,7 @@ import play.data.FormFactory;
 import javax.inject.Inject;
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 public class Application extends Controller {
 
@@ -26,7 +27,7 @@ public class Application extends Controller {
 
     public Result loginSuccess() {
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://localhost:3306/users";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/users";
         int i=0;
         List<String> name_list = new ArrayList<>();
         List<String> location_list = new ArrayList<>();
@@ -61,8 +62,6 @@ public class Application extends Controller {
 
         @Transactional
     public Result addPerson() throws ClassNotFoundException {
-        Person person = formFactory.form(Person.class).bindFromRequest().get();
-        boolean emailFormatCheckResult = checkEmailFormat(person.email);
 
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://localhost:3306/users";
@@ -108,23 +107,29 @@ public class Application extends Controller {
         }
     }
 
-    public boolean checkEmailFormat(String email) {
-        if((email.indexOf('@') > 0 ) && (email.indexOf('.') < (email.length() - 1)) && (email.indexOf('.') > 0 )) {
-            return true;
-        } else {
-            return false;
-        }
+
+    public static boolean checkIfUserExists(){
+
     }
 
-    @Transactional
-    public Result loginSubmit() {
-        ExistingPerson existingPerson = formFactory.form(ExistingPerson.class).bindFromRequest().get();
-        boolean credentialsCheckResult = checkCredentials(existingPerson.email,existingPerson.password);
+    public static boolean addNewUser(){
 
-        if(credentialsCheckResult == true) {
-            return redirect(routes.Application.loginSuccess());
-        } else {
-            return redirect(routes.Application.loginFail());
-        }
     }
+
+    public static boolean addNewProduct(){
+
+    }
+
+    public static boolean checkLimitForUser(long id, long uploadedBy, float price, String description, int priceBought, String onlineLink, int condition, int months){
+
+
+
+
+    }
+
+    public static void displayProducts(){
+        return null;
+    }
+
+
 }
