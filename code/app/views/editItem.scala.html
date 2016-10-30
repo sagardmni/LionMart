@@ -1,6 +1,10 @@
 @()
+<!DOCTYPE html>
 
-@main("LionMart") {
+<html>
+    <head>
+        <title>Lion Mart</title>
+    </head>
     <h1 style="text-align:center">Edit Item</h1>
     <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
         <table align="center" style="width:40%">
@@ -46,4 +50,4 @@
             <input type="submit" value="Mark as Sold" style="width:200px"/>
         </form>
     </div>
-}
+</html>

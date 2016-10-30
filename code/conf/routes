@@ -4,7 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index()
-GET     /loginSuccess               controllers.Application.loginSuccess()
+GET     /loginSuccess/0             controllers.Application.displayProducts(pagenum: Int ?=0)
 GET     /loginFail                  controllers.Application.loginFail()
 POST    /contact                    controllers.Application.contactSeller()
 POST    /addPerson                  controllers.Application.addPerson()

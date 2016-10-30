@@ -19,6 +19,7 @@ public class Product {
     private int condition;
     private int months;
     private int category;
+    private String location;
 
     public Product() {
 
@@ -26,7 +27,7 @@ public class Product {
 
     public Product(long id, long uploadedBy, String imagePath, float price, String description,
                    Date dateUploaded, Date dateSold, float priceBought, String onlineLink,
-                   float soldPrice, int condition, int months, int category) {
+                   float soldPrice, int condition, int months, int category, String location) {
         this.id = id;
         this.uploadedBy = uploadedBy;
         this.imagePath = imagePath;
@@ -40,6 +41,7 @@ public class Product {
         this.condition = condition;
         this.months = months;
         this.category = category;
+        this.location = location;
     }
 
     public long getId() {
@@ -143,5 +145,13 @@ public class Product {
 
     public void setCategory(int category) {
         this.category = category;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

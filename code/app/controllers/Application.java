@@ -21,36 +21,36 @@ public class Application extends Controller {
         return ok(loginFail.render());
     }
 
-    public Result loginSuccess() {
-        String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/users";
-        int i=0;
-        List<String> name_list = new ArrayList<>();
-        List<String> location_list = new ArrayList<>();
-        List<String> image_list = new ArrayList<>();
-        List<Integer> cost_list = new ArrayList<>();
-        List<Integer> years_list = new ArrayList<>();
-        try {
-            Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM item_table");
-            while(rs.next()) {
-                name_list.add(rs.getString("name"));
-                location_list.add(rs.getString("location"));
-                cost_list.add(rs.getInt("cost"));
-                years_list.add(rs.getInt("years"));
-                image_list.add("images/"+rs.getString("image_name"));
-                i++;
-            }
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return ok(loginSuccess.render(name_list,location_list,cost_list,years_list,image_list));
-    }
+//    public Result loginSuccess() {
+//        String myDriver = "com.mysql.jdbc.Driver";
+//        String myURL = "jdbc:mysql://localhost:3306/users";
+//        int i=0;
+//        List<String> name_list = new ArrayList<>();
+//        List<String> location_list = new ArrayList<>();
+//        List<String> image_list = new ArrayList<>();
+//        List<Integer> cost_list = new ArrayList<>();
+//        List<Integer> years_list = new ArrayList<>();
+//        try {
+//            Class.forName(myDriver);
+//            Connection conn = DriverManager.getConnection(myURL, "root", "1234");
+//            Statement st = conn.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM item_table");
+//            while(rs.next()) {
+//                name_list.add(rs.getString("name"));
+//                location_list.add(rs.getString("location"));
+//                cost_list.add(rs.getInt("cost"));
+//                years_list.add(rs.getInt("years"));
+//                image_list.add("images/"+rs.getString("image_name"));
+//                i++;
+//            }
+//            conn.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        return ok(loginSuccess.render(name_list,location_list,cost_list,years_list,image_list));
+//    }
 
     public Result contactSeller() {
         return ok(contact.render());
@@ -61,11 +61,11 @@ public class Application extends Controller {
     }
 
     public Result processItemForm(){
-        return redirect(routes.Application.loginSuccess());
+        return redirect(routes.Application.displayProducts(0));
     }
 
     public Result processSoldItem(){
-        return redirect(routes.Application.loginSuccess());
+        return redirect(routes.Application.displayProducts(0));
     }
 
     public Result viewItem(){
@@ -93,9 +93,8 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, email, type) VALUES ("+ u.getFbId()
-                    +","+ u.getFirstName()+","+u.getFirstName()+","+u.getLastName()+","+u.getEmail()+")" );
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60), type BOOLEAN)");
+            st.executeUpdate("INSERT INTO user(id, fname, lname, email, type) VALUES ("+ u.getFbId() +","+ u.getFirstName()+","+u.getFirstName()+","+u.getLastName()+","+u.getEmail()+","+u.isType()+")" );
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,11 +111,11 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),productCondition TINYINT NOT NULL,months_used INT,user_id NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),condition TINYINT NOTNULL,months_used INT,location VARCHAR(255) NOT NULL, user_id INT NOT NULL)");
             //TODO img path
             // TODO fb ID
 
-            st.executeUpdate("INSERT INTO product(imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,productCondition,months_used,user_id) VALUES ("+p.getImagePath()+","+p.getPrice()+","+ p.getPriceBought()+","+p.getDescription()+","+ p.getDateUploaded()+","+p.getDateSold()+","+p.getOnlineLink()+","+p.getPrice()+","+p.getCondition()+","+p.getMonths()+","+p.getUploadedBy()+")");
+            st.executeUpdate("INSERT INTO product(imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,condition,months_used,location,user_id) VALUES ("+p.getImagePath()+","+p.getPrice()+","+ p.getPriceBought()+","+p.getDescription()+","+ p.getDateUploaded()+","+p.getDateSold()+","+p.getOnlineLink()+","+p.getPrice()+","+p.getCondition()+","+p.getMonths()+","+p.getUploadedBy()+")");
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,12 +131,12 @@ public class Application extends Controller {
 
 //    public boolean checkCredentials(String email, String pwd) {
 //        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://localhost:3306/users";
+//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/users";
 //        int numRows=0;
 //
 //        try {
 //            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "root", "1234");
+//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
 //            Statement st = conn.createStatement();
 //            ResultSet rs = st.executeQuery("SELECT * FROM user_table WHERE email='"+ email +"' AND password='"+ pwd +"'");
 //            while(rs.next()) {
@@ -171,7 +170,7 @@ public class Application extends Controller {
                 if (rs.getInt("NOUSER")==1) {
                     return true;
                 }
-                    return false;
+                return false;
             }
             conn.close();
         } catch (SQLException e) {
@@ -208,7 +207,12 @@ public class Application extends Controller {
         return false;
     }
 
-    public static ArrayList<Product> displayProducts(int pagenum) throws ClassNotFoundException {
+
+    public void displayProducts() throws ClassNotFoundException {
+        displayProducts(0);
+    }
+
+    public Result displayProducts(int pagenum) throws ClassNotFoundException {
         int start = pagenum*20;
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
@@ -217,13 +221,13 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM product LIMIT"+start+", 20 ORDER BY date_upload;");
+            ResultSet rs = st.executeQuery("SELECT * FROM product");//LIMIT"+start+", 20 ORDER BY date_upload;");
             while(rs.next()){
-                Product obj = new Product(rs.getLong("id"),rs.getLong("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("condition"),rs.getInt("months_used"),rs.getInt("category"));
+                Product obj = new Product(rs.getLong("id"),rs.getLong("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
                 displayList.add(obj);
             }
             conn.close();
-            return displayList;
+            return ok(loginSuccess.render(displayList));
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

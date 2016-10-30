@@ -1,5 +1,10 @@
-@(name_list: List[String], location_list: List[String], cost_list: List[Integer], years_list: List[Integer], image_list: List[String])
-@main("Login successful"){
+@(product_list: List[models.Product])
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Lion Mart</title>
+    </head>
     <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
     <h1 class="centerBoldText">Welcome to LionMart</h1>
     <a href="/user"><h2 style="text-align: right">Username</h2></a>
@@ -9,20 +14,26 @@
     <div style="border: 1px solid black">
         <table align="center" style="width:40%">
             <tbody>
-                @for(i <- 0 until Seq(name_list, location_list, cost_list, years_list,image_list).map(_.length).max){
+                @for(product <- product_list){
+                <div>
                 <tr>
-                    <td class="image" rowspan="5"><img src='@routes.Assets.at(image_list(i))' alt="chair"></td>
-                    <td style="font-weight:bold;font-size:20px">@name_list(i)</td>
+                    <td class="image" rowspan="5">
+                        <a href="/viewItem">
+                            <img src='@routes.Assets.at(product.getImagePath()))' alt="chair">
+                            </a>
+                    </td>
+                    <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
                 </tr>
                 <tr>
-                    <td><b>Pick up from: </b> @location_list(i)</td>
+                    <td><b>Pick up from: </b> @product.getLocation()</td>
                 </tr>
                 <tr>
-                    <td><b>Used for: </b> @years_list(i) years</td>
+                    <td><b>Used for: </b> @product.getMonths() months</td>
                 </tr>
                 <tr>
-                    <td><b>Price: </b>$@cost_list(i)</td>
+                    <td><b>Price: </b>@product.getPrice()</td>
                 </tr>
+                </div>
                 <tr>
                     <td>
                         <form method="POST" action="@routes.Application.contactSeller()">
@@ -30,7 +41,6 @@
                         </form>
                     </td>
                 </tr>
-
                 }
             </tbody>
         </table>
@@ -38,4 +48,4 @@
     <footer class="centerBoldText" style="font-size:20px">
         <p>LionMart</p>
     </footer>
-}
+</html>
