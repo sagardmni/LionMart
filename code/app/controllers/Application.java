@@ -16,9 +16,6 @@ public class Application extends Controller {
     public Result index() {
         return ok(index.render());
     }
-    public Result login(){
-        return ok(login.render());
-    }
 
     public Result loginFail() {
         return ok(loginFail.render());
@@ -59,7 +56,35 @@ public class Application extends Controller {
         return ok(contact.render());
     }
 
-        @Transactional
+    public Result postItem(){
+        return ok(postItem.render());
+    }
+
+    public Result processItemForm(){
+        return redirect(routes.Application.loginSuccess());
+    }
+
+    public Result processSoldItem(){
+        return redirect(routes.Application.loginSuccess());
+    }
+
+    public Result viewItem(){
+        return ok(viewItem.render());
+    }
+
+    public Result editItem(){
+        return ok(editItem.render());
+    }
+
+    public Result markSold(){
+        return ok(markSold.render());
+    }
+
+    public Result showUser(){
+        return ok(user.render());
+    }
+
+    @Transactional
     public boolean addUser(User u) throws ClassNotFoundException {
 
         String myDriver = "com.mysql.jdbc.Driver";
@@ -99,6 +124,9 @@ public class Application extends Controller {
         return true;
     }
 
+    public Result addPerson(){
+        return ok(index.render());
+    }
 
 
 //    public boolean checkCredentials(String email, String pwd) {

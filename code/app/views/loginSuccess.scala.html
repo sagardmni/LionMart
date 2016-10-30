@@ -2,6 +2,10 @@
 @main("Login successful"){
     <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
     <h1 class="centerBoldText">Welcome to LionMart</h1>
+    <a href="/user"><h2 style="text-align: right">Username</h2></a>
+    <form method="POST" action="@routes.Application.postItem()">
+        <button style="float:right;clear:both">Post Item</button>
+    </form>
     <div style="border: 1px solid black">
         <table align="center" style="width:40%">
             <tbody>

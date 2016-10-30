@@ -2,7 +2,7 @@
 
 @main("LionMart") {
     <h1 style="text-align:center">Edit Item</h1>
-    <form method="POST" action="@routes.Application.addItem()" style="text-align: center">
+    <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
         <table align="center" style="width:40%">
             <tbody>
                 <tr>
@@ -39,6 +39,7 @@
                 </tr>
             </tbody>
         </table>
+        <input type="submit" value="Submit" style="width:200px">
     </form>
     <div style="text-align:center">
         <form action="/markSold" method="GET">
