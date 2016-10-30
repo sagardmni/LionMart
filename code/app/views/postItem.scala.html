@@ -1,0 +1,45 @@
+@()
+
+@main("LionMart") {
+    <h1 style="text-align:center">Post Item</h1>
+    <form method="POST" action="@routes.Application.storeItem()" style="text-align: center">
+        <table align="center" style="width:40%">
+            <tbody>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" name="item_name" style="width:100%"></td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td><textarea style="width:100%" rows="4"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Condition:</td>
+                    <td>
+                        <select style="width:100%">
+                            <option value="3 months">Less than 3 months old</option>
+                            <option value="6 months">3-6 months old</option>
+                            <option value="3 years">6 months - 3 years</option>
+                            <option value=">3 years">> 3years</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td><input type="text" name="price" style="width:20%;float:left">
+                        <div style="float:left">$</div></td>
+                </tr>
+                <tr>
+                    <td>Category:</td>
+                    <td><input type="text" name="category" style="width:100%"></td>
+                </tr>
+                <tr>
+                    <td>Online Link:</td>
+                    <td><input type="text" name="item_link" style="width:100%"></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+
+}
