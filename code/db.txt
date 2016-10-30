@@ -1,0 +1,51 @@
+CREATE TABLE IF NOT EXISTS user (
+id VARCHAR(25) PRIMARY,
+fname VARCHAR(30),
+lname VARCHAR(30),
+email VARCHAR(60),
+type BOOLEAN
+)
+
+CREATE TABLE IF NOT EXISTS product (
+id INT PRIMARY KEY,
+imagepath VARCHAR(100),
+category INT NOT NULL,
+price_bought DECIMAL(8,2) NOT NULL,
+description TEXT NOT NULL,
+date_upload TIMESTAMP,
+date_sold TIMESTAMP,
+online_link VARCHAR(255),
+price_sold DECIMAL(8,2),
+condition TINYINT NOT NULL,
+months_used INT,
+user_id NOT NULL
+)	
+
+// add new user
+
+INSERT INTO user(id, fname, lname, email, type) VALUES (INPUT_id,INPUT_fname,INPUT_lname,INPUT_email,INPUT_type)
+
+// check if user exists
+
+SELECT * FROM user WHERE id = INPUT_ID;
+
+// add new product
+
+INSERT INTO product(imagepath, category, price_bought, description, date_upload,date_sold,online_link,price_sold,condition,months_used,user_id) VALUES (imagepath, price_bought, description, date_upload,date_sold,online_link,price_sold,condition,months_used,user_id)
+
+// get no. of products per user
+
+SELECT COUNT(*) products WHERE user_id = INPUT;
+
+// update product
+
+UPDATE product
+SET imagepath = IMAGE_PATH, price_bought = PRICE_BOUGHT, description = DESCRIPTION, date_upload = DATE_UPLOAD,date_sold = DATE_SOLD,online_link = ONLINE_LINK,price_sold = PRICE_SOLD,condition = CONDITION,months_used = MONTHS_USED,user_id = USER_ID
+WHERE id = ID;
+
+// mark product as sold
+UPDATE product
+SET price_sold = INPUT
+WHERE id = PRODUCT_ID;
+
+//
