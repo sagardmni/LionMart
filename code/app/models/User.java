@@ -9,17 +9,15 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    private boolean type;
 
     public User() {
     }
 
-    public User(long fbId, String firstName, String lastName, String email, boolean type) {
+    public User(long fbId, String firstName, String lastName, String email) {
         this.fbId = fbId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.type = type;
     }
 
     public long getFbId() {
@@ -54,11 +52,4 @@ public class User {
         this.email = email;
     }
 
-    public boolean isType() {
-        return type;
-    }
-
-    public void setType(boolean type) {
-        this.type = type;
-    }
 }

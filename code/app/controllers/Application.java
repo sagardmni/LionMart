@@ -93,8 +93,9 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60), type BOOLEAN)");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, email, type) VALUES ("+ u.getFbId() +","+ u.getFirstName()+","+u.getFirstName()+","+u.getLastName()+","+u.getEmail()+","+u.isType()+")" );
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
+            st.executeUpdate("INSERT INTO user(id, fname, lname, email, type) VALUES ("+ u.getFbId()
+                    +","+ u.getFirstName()+","+u.getFirstName()+","+u.getLastName()+","+u.getEmail()+")" );
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,11 +112,11 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),condition TINYINT NOTNULL,months_used INT,user_id NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),productCondition TINYINT NOT NULL,months_used INT,user_id NOT NULL)");
             //TODO img path
             // TODO fb ID
 
-            st.executeUpdate("INSERT INTO product(imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,condition,months_used,user_id) VALUES ("+p.getImagePath()+","+p.getPrice()+","+ p.getPriceBought()+","+p.getDescription()+","+ p.getDateUploaded()+","+p.getDateSold()+","+p.getOnlineLink()+","+p.getPrice()+","+p.getCondition()+","+p.getMonths()+","+p.getUploadedBy()+")");
+            st.executeUpdate("INSERT INTO product(imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,productCondition,months_used,user_id) VALUES ("+p.getImagePath()+","+p.getPrice()+","+ p.getPriceBought()+","+p.getDescription()+","+ p.getDateUploaded()+","+p.getDateSold()+","+p.getOnlineLink()+","+p.getPrice()+","+p.getCondition()+","+p.getMonths()+","+p.getUploadedBy()+")");
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
