@@ -32,7 +32,7 @@ public class Application extends Controller {
         List<Integer> years_list = new ArrayList<>();
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "root", "1234");
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM item_table");
             while(rs.next()) {
