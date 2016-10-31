@@ -106,28 +106,35 @@ public class Application extends Controller {
     }
 
     @Transactional
-    public boolean addUser(User u) throws ClassNotFoundException {
-
+    public Result addUser(String fbID, String fbName, String fbEmail) throws ClassNotFoundException {
+        if(checkIfUserExists(fbID)){
+            return redirect(routes.Application.displayProducts(0));
+        }
+        String[] nameSplit = fbName.split(" ");
+        String fname = nameSplit[0];
+        String lname = nameSplit[1];
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
         try {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60), type BOOLEAN)");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, email, type) VALUES ("+ u.getFbId() +","+ u.getFirstName()+","+u.getFirstName()+","+u.getLastName()+","+u.getEmail()+")" );
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
+
+            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ fbID +"','"+ fname+"','"+lname+"','"+fbEmail+"')");
             conn.close();
+            return redirect(routes.Application.displayProducts(0));
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return ok(main.render());
         }
-        return true;
+
     }
 
     public boolean addProduct(Product p) throws ClassNotFoundException {
 
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
         try {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
@@ -183,15 +190,15 @@ public class Application extends Controller {
 //    }
 
 
-    public static boolean checkIfUserExists(long id) throws ClassNotFoundException {
+    public static boolean checkIfUserExists(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
         try {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2),imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),condition TINYINT NOTNULL,months_used INT,user_id NOT NULL)");
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) AS NOUSER FROM user WHERE id ="+ id +";");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) AS NOUSER FROM user WHERE id ='"+ id +"';");
             while(rs.next()){
                 if (rs.getInt("NOUSER")==1) {
                     return true;
@@ -247,7 +254,8 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM product");//LIMIT"+start+", 20 ORDER BY date_upload;");
+            ResultSet rs = st.executeQuery("SELECT * FROM product ORDER BY date_upload");//LIMIT"+start+", 20 ORDER BY date_upload;");
+
             while(rs.next()){
                 Product obj = new Product(rs.getLong("id"),rs.getLong("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
                 displayList.add(obj);

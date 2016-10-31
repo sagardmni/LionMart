@@ -14,6 +14,7 @@
     <div style="border: 1px solid black">
         <table align="center" style="width:40%">
             <tbody>
+                @if(!product_list.isEmpty){
                 @for(product <- product_list){
                 <div>
                 <tr>
@@ -45,6 +46,7 @@
                         </form>
                     </td>
                 </tr>
+                }
                 }
             </tbody>
         </table>

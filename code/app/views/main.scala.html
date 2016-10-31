@@ -1,11 +1,12 @@
-@(title: String)(content: Html)
-
+@()
 <!DOCTYPE html>
 
 <html>
     <head>
         <title>Lion Mart</title>
     </head>
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
+    <h1 class="centerBoldText">Welcome to LionMart</h1>
     <body>
         <script>
                 var FB;
@@ -15,11 +16,16 @@
                         xfbml      : true,
                         version    : 'v2.6'
                     });
+
+
+
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-                            window.location.replace(window.location.href+"login");
                             var uid = response.authResponse.userID;
                             var accessToken = response.authResponse.accessToken;
+                            console.log(uid);
+                            getUserData();
+
                         } else if (response.status === 'not_authorized') {
                             // the user is logged in to Facebook,
                             // but has not authenticated your app
@@ -27,6 +33,15 @@
                             // the user isn't logged in to Facebook.
                         }
                     });
+
+                    function getUserData(){
+                        FB.api('/me', {fields: 'name,email'},function (response) {
+                            var fbID = response.id;
+                            var fbName = response.name;
+                            var fbEmail = response.email;
+                            window.location.replace(window.location.href+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                        });
+                    }
                 };
 
                 (function(d, s, id){
@@ -42,10 +57,8 @@
 
 
         <div id="fb-root"></div>
-        <h1>Facebook Login Page</h1>
 
-        <div class="fb-login-button" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
-
+        <div class="fb-login-button" data-size="xlarge" scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
 
     </body>
 </html>
