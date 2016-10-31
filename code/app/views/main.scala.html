@@ -16,8 +16,10 @@
                         xfbml      : true,
                         version    : 'v2.6'
                     });
-
-
+                    FB.Event.subscribe('auth.login', function()
+                    {
+                        window.location.reload();
+                    });
 
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
@@ -27,10 +29,8 @@
                             getUserData();
 
                         } else if (response.status === 'not_authorized') {
-                            // the user is logged in to Facebook,
-                            // but has not authenticated your app
+
                         } else {
-                            // the user isn't logged in to Facebook.
                         }
                     });
 
@@ -58,7 +58,7 @@
 
         <div id="fb-root"></div>
 
-        <div class="fb-login-button" data-size="xlarge" scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
+        <div class="fb-login-button" data-size="xlarge" onlogin = window.location.href+"/loginSuccess/0" scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
 
     </body>
 </html>
