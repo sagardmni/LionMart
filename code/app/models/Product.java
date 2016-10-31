@@ -123,13 +123,12 @@ public class Product {
     }
 
     public String mapMonthsToString() {
-        HashMap<Integer, String> myMap = new HashMap<>();
-        myMap.put(1,"Less than 3 months");
-        myMap.put(2,"3-6 months");
-        myMap.put(3,"6 months - 3 years");
-        myMap.put(4,"3 years");
-        String months = new String(myMap.get(this.getMonths()));
-        return months;
+        String[] months = new String[4];
+        months[0] = "Less than 3 months";
+        months[1] = "3-6 months";
+        months[2] = "6 months - 3 years";
+        months[3] = ">3 years";
+        return months[this.getMonths()];
     }
 
     public void setMonths(int months) {
