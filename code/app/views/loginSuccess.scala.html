@@ -19,7 +19,8 @@
                 <tr>
                     <td class="image" rowspan="5">
                         <a href="/viewItem">
-                            <img src='@routes.Assets.at(product.getImagePath()))' alt="chair">
+                            @*to-do: use the actual image here*@
+                            <img src='@routes.Assets.at("images/chair.jpg")' alt="chair">
                             </a>
                     </td>
                     <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
@@ -28,9 +29,12 @@
                     <td><b>Pick up from: </b> @product.getLocation()</td>
                 </tr>
                 <tr>
-                    <td><b>Used for: </b> @product.getMonths() months</td>
+                    <td><b>Used for: </b> @product.mapMonthsToString()</td>
                 </tr>
-                <tr>
+                    <tr>
+                        <td><b>Condition rating: </b> @product.getCondition()</td>
+                    </tr>
+                    <tr>
                     <td><b>Price: </b>@product.getPrice()</td>
                 </tr>
                 </div>

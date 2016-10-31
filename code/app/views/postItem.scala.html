@@ -14,21 +14,29 @@
                     <td colspan="2"><input type="file" name="item_picture" accept="image/*"></td>
                 </tr>
                 <tr>
-                    <td>Name:</td>
-                    <td><input type="text" name="item_name" style="width:100%"></td>
-                </tr>
-                <tr>
                     <td>Description:</td>
-                    <td><textarea style="width:100%" rows="4"></textarea></td>
+                    <td><textarea name="item_description" style="width:100%" rows="4"></textarea></td>
                 </tr>
                 <tr>
                     <td>Condition:</td>
                     <td>
-                        <select style="width:100%">
-                            <option value="3 months">Less than 3 months old</option>
-                            <option value="6 months">3-6 months old</option>
-                            <option value="3 years">6 months - 3 years</option>
-                            <option value=">3 years">> 3years</option>
+                        <select name="item_condition" style="width:100%">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Months used:</td>
+                    <td>
+                        <select name="item_months" style="width:100%">
+                            <option value="1">Less than 3 months old</option>
+                            <option value="2">3-6 months old</option>
+                            <option value="3">6 months - 3 years</option>
+                            <option value="4"> >3 years</option>
                         </select>
                     </td>
                 </tr>
@@ -39,11 +47,15 @@
                 </tr>
                 <tr>
                     <td>Category:</td>
-                    <td><input type="text" name="category" style="width:100%"></td>
+                    <td><input type="text" name="item_category" style="width:100%"></td>
                 </tr>
                 <tr>
                     <td>Online Link:</td>
                     <td><input type="text" name="item_link" style="width:100%"></td>
+                </tr>
+                <tr>
+                    <td>Location:</td>
+                    <td><input type="text" name="item_location" style="width:100%"></td>
                 </tr>
             </tbody>
         </table>

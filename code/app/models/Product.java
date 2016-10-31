@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by akshay on 10/29/2016.
@@ -118,6 +119,16 @@ public class Product {
     }
 
     public int getMonths() {
+        return months;
+    }
+
+    public String mapMonthsToString() {
+        HashMap<Integer, String> myMap = new HashMap<>();
+        myMap.put(1,"Less than 3 months");
+        myMap.put(2,"3-6 months");
+        myMap.put(3,"6 months - 3 years");
+        myMap.put(4,"3 years");
+        String months = new String(myMap.get(this.getMonths()));
         return months;
     }
 
