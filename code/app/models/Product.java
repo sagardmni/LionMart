@@ -8,7 +8,7 @@ import java.util.HashMap;
  */
 public class Product {
     private long id;
-    private long uploadedBy;
+    private String uploadedBy;
     private String imagePath;
     private float price;
     private String description;
@@ -26,7 +26,7 @@ public class Product {
 
     }
 
-    public Product(long id, long uploadedBy, String imagePath, float price, String description,
+    public Product(long id, String uploadedBy, String imagePath, float price, String description,
                    Date dateUploaded, Date dateSold, float priceBought, String onlineLink,
                    float soldPrice, int condition, int months, int category, String location) {
         this.id = id;
@@ -142,11 +142,11 @@ public class Product {
         this.priceBought = priceBought;
     }
 
-    public long getUploadedBy() {
+    public String getUploadedBy() {
         return uploadedBy;
     }
 
-    public void setUploadedBy(long uploadedBy) {
+    public void setUploadedBy(String uploadedBy) {
         this.uploadedBy = uploadedBy;
     }
     public int getCategory() {
