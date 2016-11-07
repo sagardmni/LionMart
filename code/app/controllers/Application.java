@@ -23,37 +23,6 @@ public class Application extends Controller {
         return ok(loginFail.render());
     }
 
-//    public Result loginSuccess() {
-//        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://localhost:3306/users";
-//        int i=0;
-//        List<String> name_list = new ArrayList<>();
-//        List<String> location_list = new ArrayList<>();
-//        List<String> image_list = new ArrayList<>();
-//        List<Integer> cost_list = new ArrayList<>();
-//        List<Integer> years_list = new ArrayList<>();
-//        try {
-//            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "root", "1234");
-//            Statement st = conn.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM item_table");
-//            while(rs.next()) {
-//                name_list.add(rs.getString("name"));
-//                location_list.add(rs.getString("location"));
-//                cost_list.add(rs.getInt("cost"));
-//                years_list.add(rs.getInt("years"));
-//                image_list.add("images/"+rs.getString("image_name"));
-//                i++;
-//            }
-//            conn.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return ok(loginSuccess.render(name_list,location_list,cost_list,years_list,image_list));
-//    }
-
     public Result contactSeller() {
         return ok(contact.render());
     }
@@ -161,35 +130,6 @@ public class Application extends Controller {
         return ok(index.render());
     }
 
-
-//    public boolean checkCredentials(String email, String pwd) {
-//        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/users";
-//        int numRows=0;
-//
-//        try {
-//            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-//            Statement st = conn.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM user_table WHERE email='"+ email +"' AND password='"+ pwd +"'");
-//            while(rs.next()) {
-//                numRows++;
-//            }
-//            System.out.println(numRows);
-//            conn.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        if(numRows == 1){
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
-
     public static boolean checkIfUserExists(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
@@ -254,15 +194,16 @@ public class Application extends Controller {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
+            int offset = pagenum*20;
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id INT NOT NULL)");
-            ResultSet rs = st.executeQuery("SELECT * FROM product ORDER BY date_upload");//LIMIT"+start+", 20 ORDER BY date_upload;");
+            ResultSet rs = st.executeQuery("SELECT * FROM product ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
 
             while(rs.next()){
                 Product obj = new Product(rs.getLong("id"),rs.getLong("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
                 displayList.add(obj);
             }
             conn.close();
-            return ok(loginSuccess.render(displayList));
+            return ok(loginSuccess.render(displayList,pagenum));
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
