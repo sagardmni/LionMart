@@ -42,12 +42,12 @@
                 </tr>
                 <tr>
                     <td>Price:</td>
-                    <td><input type="text" name="price" style="width:20%;float:left" required>
+                    <td><input type="number" min="0" max="999999" name="price" style="width:20%;float:left" required>
                         <div style="float:left">$</div></td>
                 </tr>
                 <tr>
                     <td>Original Price:</td>
-                    <td><input type="text" name="original_price" style="width:20%;float:left" required>
+                    <td><input type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" required>
                         <div style="float:left">$</div></td>
                 </tr>
                 <tr>
@@ -60,7 +60,6 @@
                             <option value="4">Electronics</option>
                         </select>
                     </td>
-                    @*<input type="text" name="item_category" style="width:100%"></td>*@
                 </tr>
                 <tr>
                     <td>Online Link (optional) :</td>
