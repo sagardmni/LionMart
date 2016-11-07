@@ -196,7 +196,7 @@ public class Application extends Controller {
             Statement st = conn.createStatement();
             int offset = pagenum*20;
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
-            ResultSet rs = st.executeQuery("SELECT * FROM product ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
+            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
 
             while(rs.next()){
                 Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
