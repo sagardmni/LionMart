@@ -60,9 +60,11 @@
                 <input type='submit' style="width:200px" value='<-Previous' onclick="changeURL(-1)" />
             </form>
         }
-        <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.displayProducts(1000)">
-            <input type='submit' style="width:200px" value='Next->' onclick="changeURL(1)" />
-        </form>
+        @if(product_list.length == 20) {
+            <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.displayProducts(1000)">
+                <input type='submit' style="width: 200px" value='Next->' onclick="changeURL(1)" />
+            </form>
+        }
     </div>
 
     <script>
