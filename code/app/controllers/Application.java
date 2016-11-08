@@ -17,7 +17,7 @@ public class Application extends Controller {
 
     private String currentFbID = "-1";
 
-    public Result something(){
+    public Result index(){
         return main(0);
     }
     public Result main(int pagenum) {
@@ -40,7 +40,6 @@ public class Application extends Controller {
                 displayList.add(obj);
             }
             conn.close();
-            return ok(main.render(displayList,pagenum));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,14 +47,9 @@ public class Application extends Controller {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        return redirect( routes.Application.displayProducts(0));
+        return ok(main.render(displayList,pagenum));
     }
-
-    public Result loginFail() {
-        return ok(loginFail.render());
-    }
-
+    
     public Result contactSeller() {
         return ok(contact.render());
     }

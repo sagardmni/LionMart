@@ -3,12 +3,11 @@
 # ~~~~
 
 # Home page
-GET     /                            controllers.Application.something()
+GET     /                           controllers.Application.index()
+GET     /addUser                    controllers.Application.addUser(fbID:String, fbName:String, fbEmail:String)
 GET     /:pagenum                   controllers.Application.main(pagenum: Int)
 GET     /loginSuccess/:pagenum      controllers.Application.displayProducts(pagenum: Int)
-GET     /loginFail                  controllers.Application.loginFail()
 POST    /contact                    controllers.Application.contactSeller()
-GET     /addUser/:fbID/:fbName/:fbEmail                    controllers.Application.addUser(fbID:String, fbName:String, fbEmail:String)
 GET     /postItem                   controllers.Application.postItem()
 POST    /person                     controllers.Application.addPerson()
 POST    /processItemForm            controllers.Application.processItemForm()
