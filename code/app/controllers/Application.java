@@ -21,13 +21,10 @@ public class Application extends Controller {
         return redirect(routes.Application.main(0));
     }
     public Result main(int pagenum) {
-        System.out.println("in main");
-        int start = pagenum*20;
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         try {
-            System.out.println("in try");
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
@@ -106,7 +103,6 @@ public class Application extends Controller {
 
     @Transactional
     public Result addUser(String fbID, String fbName, String fbEmail) throws ClassNotFoundException {
-        System.out.println("Inside add user, and recd. "+fbID+fbName+fbEmail);
         currentFbID = fbID;
         if(checkIfUserExists(fbID)){
             return redirect(routes.Application.displayProducts(0));
@@ -202,19 +198,11 @@ public class Application extends Controller {
         return false;
     }
 
-
-    public void displayProducts() throws ClassNotFoundException {
-        displayProducts(0);
-    }
-
     public Result displayProducts(int pagenum) throws ClassNotFoundException {
-        System.out.println("in displayproducts");
-        int start = pagenum*20;
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         try {
-            System.out.println("in try");
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
