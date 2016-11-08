@@ -15,10 +15,41 @@ import play.data.Form;
 
 public class Application extends Controller {
 
-    private String currentFbID = null;
+    private String currentFbID = "-1";
 
-    public Result index() {
-        return ok(main.render());
+    public Result something(){
+        return main(0);
+    }
+    public Result main(int pagenum) {
+        System.out.println("in main");
+        int start = pagenum*20;
+        ArrayList<Product> displayList = new ArrayList<Product>();
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        try {
+            System.out.println("in try");
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+            int offset = pagenum*20;
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
+
+            while(rs.next()){
+                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+                displayList.add(obj);
+            }
+            conn.close();
+            return ok(main.render(displayList,pagenum));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return redirect( routes.Application.displayProducts(0));
     }
 
     public Result loginFail() {
@@ -81,6 +112,7 @@ public class Application extends Controller {
 
     @Transactional
     public Result addUser(String fbID, String fbName, String fbEmail) throws ClassNotFoundException {
+        System.out.println("Inside add user, and recd. "+fbID+fbName+fbEmail);
         currentFbID = fbID;
         if(checkIfUserExists(fbID)){
             return redirect(routes.Application.displayProducts(0));
@@ -101,7 +133,7 @@ public class Application extends Controller {
             return redirect(routes.Application.displayProducts(0));
         } catch (SQLException e) {
             e.printStackTrace();
-            return ok(main.render());
+            return redirect(routes.Application.main(0));
         }
 
     }
@@ -186,11 +218,13 @@ public class Application extends Controller {
     }
 
     public Result displayProducts(int pagenum) throws ClassNotFoundException {
+        System.out.println("in displayproducts");
         int start = pagenum*20;
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         try {
+            System.out.println("in try");
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
@@ -204,6 +238,7 @@ public class Application extends Controller {
             }
             conn.close();
             return ok(loginSuccess.render(displayList,pagenum));
+
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
