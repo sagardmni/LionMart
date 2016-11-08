@@ -14,6 +14,7 @@ GET     /viewItem                   controllers.Application.viewItem()
 GET     /editItem                   controllers.Application.editItem()
 GET     /markSold                   controllers.Application.markSold()
 POST    /processSoldItem            controllers.Application.processSoldItem()
+GET     /productLimit               controllers.Application.displayProductLimitError()
 GET     /:pagenum                   controllers.Application.main(pagenum: Int)
 
 
