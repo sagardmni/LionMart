@@ -55,8 +55,15 @@ public class Application extends Controller {
         return ok(postItem.render());
     }
 
-    public Result processItemForm(){
-        //Process form here
+    public Result displayProductLimitError(){
+        return ok(productLimit.render());
+    }
+
+    public Result processItemForm() throws ClassNotFoundException {
+        if(checkLimitForUser(currentFbID)){
+            return displayProductLimitError();
+        }
+
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
@@ -132,6 +139,7 @@ public class Application extends Controller {
 
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+
         try {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
@@ -171,11 +179,7 @@ public class Application extends Controller {
         return false;
     }
 
-
-
-
-
-    public static boolean checkLimitForUser(long id) throws ClassNotFoundException {
+    public static boolean checkLimitForUser(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         try {
@@ -183,9 +187,9 @@ public class Application extends Controller {
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) products WHERE user_id = "+id+" AND price_sold=-1;");
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) products AS NUMBER_OF_PROD WHERE user_id = "+id+" AND price_sold IS NULL ;");
             while(rs.next()){
-                if (rs.getInt("NOUSER")>100) {
+                if (rs.getInt("NUMBER_OF_PROD")>100) {
                     return false;
                 }
                 return true;
