@@ -18,7 +18,7 @@ public class Application extends Controller {
     private String currentFbID = "-1";
 
     public Result index(){
-        return main(0);
+        return redirect(routes.Application.main(0));
     }
     public Result main(int pagenum) {
         System.out.println("in main");
@@ -49,7 +49,7 @@ public class Application extends Controller {
         }
         return ok(main.render(displayList,pagenum));
     }
-    
+
     public Result contactSeller() {
         return ok(contact.render());
     }
@@ -152,10 +152,6 @@ public class Application extends Controller {
         return true;
     }
 
-    public Result addPerson(){
-        return ok(index.render());
-    }
-
     public static boolean checkIfUserExists(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
@@ -231,7 +227,7 @@ public class Application extends Controller {
                 displayList.add(obj);
             }
             conn.close();
-            return ok(loginSuccess.render(displayList,pagenum));
+            return ok(home.render(displayList,pagenum));
 
         } catch (SQLException e) {
             e.printStackTrace();

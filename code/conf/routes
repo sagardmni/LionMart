@@ -5,17 +5,16 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET     /addUser                    controllers.Application.addUser(fbID:String, fbName:String, fbEmail:String)
-GET     /:pagenum                   controllers.Application.main(pagenum: Int)
-GET     /loginSuccess/:pagenum      controllers.Application.displayProducts(pagenum: Int)
+GET     /home/:pagenum              controllers.Application.displayProducts(pagenum: Int)
 POST    /contact                    controllers.Application.contactSeller()
 GET     /postItem                   controllers.Application.postItem()
-POST    /person                     controllers.Application.addPerson()
 POST    /processItemForm            controllers.Application.processItemForm()
 GET     /user                       controllers.Application.showUser()
 GET     /viewItem                   controllers.Application.viewItem()
 GET     /editItem                   controllers.Application.editItem()
 GET     /markSold                   controllers.Application.markSold()
 POST    /processSoldItem            controllers.Application.processSoldItem()
+GET     /:pagenum                   controllers.Application.main(pagenum: Int)
 
 
 # Map static resources from the /public folder to the /assets URL path

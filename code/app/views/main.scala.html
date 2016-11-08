@@ -39,8 +39,8 @@
                             var fbEmail = response.email;
                             var baseURL = window.location.href.slice(0,-1);
                             console.log(baseURL);
-                            console.log(baseURL+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
-                            window.location.replace(baseURL+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            console.log(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            window.location.replace(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
                         });
                     }
                 };
