@@ -79,7 +79,7 @@ public class Application extends Controller {
                 maxID = rs.getInt(1);
             }
             String imagePath = dynamicForm.get("item_picture");
-            Product p = new Product(maxID+1,currentFbID,imagePath,Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), 0,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
+            Product p = new Product(maxID+1,currentFbID,imagePath,Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
             addProduct(p);
         }catch(Exception e)
         {
@@ -187,12 +187,12 @@ public class Application extends Controller {
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) products AS NUMBER_OF_PROD WHERE user_id = "+id+" AND price_sold IS NULL ;");
-            while(rs.next()){
-                if (rs.getInt("NUMBER_OF_PROD")>100) {
-                    return false;
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) from product WHERE user_id = '"+id+"' AND price_sold = -1 ;");
+            if(rs.next()){
+                if (rs.getInt(1)>99) {
+                    return true;
                 }
-                return true;
+                return false;
             }
             conn.close();
         } catch (SQLException e) {
