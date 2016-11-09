@@ -1,10 +1,12 @@
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import models.Product;
+import models.User;
 import controllers.Application;
 import play.db.Database;
 import play.db.Databases;
+import java.util.Date;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -13,6 +15,8 @@ import java.sql.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 
@@ -23,13 +27,15 @@ import org.junit.FixMethodOrder;
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class ApplicationTest {
+public class ApplicationTest extends Application{
     String myDriver;
     String myURL;
-    String name1,name2;
+    String name1;
+    float price1;
+
 
     @Test
-    public void t2RetrieveCheck() {
+    public void UserRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
         myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
@@ -38,12 +44,12 @@ public class ApplicationTest {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE  user_table (email VARCHAR(50) PRIMARY KEY, name VARCHAR (50), password VARCHAR(12))");
-            st.executeUpdate("INSERT INTO user_table (email, name, password)" +
-                    "VALUES (\'ak@gm.com\', \'akshay kumar\',\'W&rY69\')");
-            rs = st.executeQuery("SELECT name FROM user_table WHERE email=\'ak@gm.com\'");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
+            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ "123456789" +"','"+ "akshay"+"','"+"kumar"+"','"+"ak@gmail.com"+"')");
+            conn.close();
+            rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gm.com\'");
             while(rs.next()) {
-                name1 = rs.getString("name");
+                name1 = rs.getString("fname");
                 System.out.println(rs.toString());
             }
             conn.close();
@@ -52,11 +58,11 @@ public class ApplicationTest {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals("akshay kumar", name1);
+        assertEquals("akshay", name1);
     }
 
     @Test
-    public void t3DeleteCheck(){
+    public void ProductRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
         myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
@@ -64,10 +70,17 @@ public class ApplicationTest {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
-            st.executeUpdate("DELETE FROM user_table WHERE email=\'ak@gm.com\'");
-            rs = st.executeQuery("SELECT name FROM user_table WHERE email=\'ak@gm.com\'");
+            Date d1 = new Date();
+            Date d2 = new Date();
+
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
+            st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
+            conn.close();
+            rs = st.executeQuery("SELECT price FROM product WHERE id='123456789'");
             while(rs.next()) {
-                name2 = rs.getString("name");
+                name1 = rs.getString("fname");
                 System.out.println(rs.toString());
             }
             conn.close();
@@ -76,15 +89,32 @@ public class ApplicationTest {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals(name2, null);
+        assertEquals(12.34, price1);
     }
 
     @Test
-    public void t1EmailFormatCheck(){
-        Application a = new Application();
-        assertEquals(true,a.checkEmailFormat("abcd@xyz.com"));
-        assertEquals(false,a.checkEmailFormat("abcd@xyz"));
-        assertEquals(false,a.checkEmailFormat("@xyz"));
-        assertEquals(false,a.checkEmailFormat("ab@xyz."));
+    public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
+
+        Class.forName(myDriver);
+        Connection conn = DriverManager.getConnection(myURL, "root", "");
+        Statement st = conn.createStatement();
+        Date d1 = new Date();
+        Date d2 = new Date();
+        Product[] prodArray = new Product[101];
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT -1,product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+        for(int i=0;i<=100;i++){
+            prodArray[i] = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
+            st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
+        }
+        ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = "+"'123456789'"+" AND price_sold = -1 ;");
+        boolean limitReached=false;
+        while(rs.next()){
+            if (rs.getInt("NUMBER_OF_PROD")>100) {
+                limitReached = true;
+            }
+        }
+        conn.close();
+        assertTrue(limitReached);
     }
 }
