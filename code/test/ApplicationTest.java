@@ -45,7 +45,7 @@ public class ApplicationTest extends Application{
             Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ "'123456789'" +"','"+ "'akshay'"+"','"+"'kumar'"+"','"+"'ak@gmail.com'"+"')");
+            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
             conn.close();
             rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gmail.com\'");
             while(rs.next()) {
