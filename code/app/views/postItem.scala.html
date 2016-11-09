@@ -18,7 +18,7 @@
                     <td><textarea name="item_description" style="width:100%" rows="4" required></textarea></td>
                 </tr>
                 <tr>
-                    <td>Condition:</td>
+                    <td>Condition (5=Excellent):</td>
                     <td>
                         <select name="item_condition" style="width:100%">
                             <option value="1">1</option>
@@ -63,11 +63,11 @@
                 </tr>
                 <tr>
                     <td>Online Link (optional) :</td>
-                    <td><input type="text" name="item_link" style="width:100%"></td>
+                    <td><input type="url" maxlength="255" name="item_link" style="width:100%"></td>
                 </tr>
                 <tr>
                     <td>Location:</td>
-                    <td><input type="text" name="item_location" style="width:100%" required></td>
+                    <td><input type="text" maxlength="255" name="item_location" style="width:100%" required></td>
                 </tr>
             </tbody>
         </table>
