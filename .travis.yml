@@ -1,4 +1,3 @@
-before_script: cd code
 language: scala
 scala:
   - 2.11.7
@@ -12,5 +11,6 @@ services:
   - mysql
 sudo: true
 before_script:
+  - cd code
   - bash .travis.install-mysql-5.7.sh 
   - mysql -u root -e "CREATE DATABASE mydatabase;"
