@@ -74,7 +74,7 @@ public class ApplicationTest extends Application{
             Date d2 = new Date();
 
             Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2) DEFAULT '-1.00', imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
             rs = st.executeQuery("SELECT price FROM product WHERE id='123456789'");
@@ -102,13 +102,13 @@ public class ApplicationTest extends Application{
         Date d1 = new Date();
         Date d2 = new Date();
         Product[] prodArray = new Product[101];
-        st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT -1.00,product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT '-1.00',product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
         for(int i=0;i<=100;i++){
             prodArray[i] = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
         }
-        rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = " + "'123456789'" + " AND price_sold = -1 ;");
+        rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = " + "'123456789'" + " AND price_sold = -1.00 ;");
         boolean limitReached=false;
         while(rs.next()){
             if (rs.getInt("NUMBER_OF_PROD")>100) {
