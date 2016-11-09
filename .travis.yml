@@ -1,3 +1,4 @@
+before_script: cd code
 language: scala
 scala:
   - 2.11.7
