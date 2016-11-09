@@ -43,8 +43,8 @@ public class ApplicationTest extends Application{
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), fbEmail VARCHAR(60))");
+            st.executeUpdate("INSERT INTO user(id, fname, lname, fbEmail) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
 
             rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gmail.com\'");
             while(rs.next()) {
@@ -88,7 +88,6 @@ public class ApplicationTest extends Application{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         assertEquals(12.34, price1,0.01);
     }
 
