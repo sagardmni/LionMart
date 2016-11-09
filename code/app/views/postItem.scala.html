@@ -6,7 +6,64 @@
     <head>
         <title>Lion Mart</title>
     </head>
-    <h1 style="text-align:center">Post Item</h1>
+    <body>
+        <script>
+                var FB;
+                window.fbAsyncInit = function() {
+                    FB.init({
+                        appId      : '153128161818624',
+                        xfbml      : true,
+                        version    : 'v2.6'
+                    });
+                    FB.Event.subscribe('auth.login', function()
+                    {
+                        window.location.reload();
+                    });
+                    FB.getLoginStatus(function(response) {
+                        if (response.status === 'connected') {
+//                            var uid = response.authResponse.userID;
+//                            var accessToken = response.authResponse.accessToken;
+//                            console.log(uid);
+//                            getUserData();
+                        } else if (response.status === 'not_authorized') {
+                            console.log("not authorized");
+                            gotoHome();
+                        } else {
+                            console.log("not logged in");
+                            gotoHome();
+                        }
+                    });
+                    function getUserData(){
+
+                        FB.api('/me', {fields: 'name,email'},function (response) {
+                            var fbID = response.id;
+                            var fbName = response.name;
+                            var fbEmail = response.email;
+                            var baseURL = window.location.href.slice(0,-1);
+                            console.log(baseURL);
+                            console.log(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            window.location.replace(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                        });
+                    }
+
+                    function gotoHome(){
+                        var currentURL = window.location.href;
+                        var parts = currentURL.split('/');
+                        baseURL = parts[0] + "/";
+                        window.location.replace(baseURL);
+                    }
+                };
+                
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+        </script>
+
+        <h1 style="text-align:center">Post Item</h1>
     <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
         <table align="center" style="width:40%">
             <tbody>
@@ -73,4 +130,5 @@
         </table>
         <input type="submit" value="Submit">
     </form>
+    </body>
     </html>
