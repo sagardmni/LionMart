@@ -108,12 +108,11 @@ public class ApplicationTest extends Application{
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
         }
-        rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = '123456789' AND price_sold = '-1.00' ;");
+        rs = st.executeQuery("SELECT COUNT(*) FROM product WHERE user_id = '123456789' AND price_sold = '-1.00' ;");
         boolean limitReached=false;
-        while(rs.next()){
-            if (rs.getInt("NUMBER_OF_PROD")>100) {
-                limitReached = true;
-            }
+        rs.last();
+        if (rs.getRow()>100) {
+            limitReached = true;
         }
         conn.close();
         assertTrue(limitReached);
