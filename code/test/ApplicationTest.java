@@ -40,13 +40,12 @@ public class ApplicationTest extends Application{
         myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
         try {
-
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
             st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
-            conn.close();
+
             rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gmail.com\'");
             while(rs.next()) {
                 name1 = rs.getString("fname");
@@ -58,6 +57,7 @@ public class ApplicationTest extends Application{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         assertEquals("akshay", name1);
     }
 
@@ -78,7 +78,7 @@ public class ApplicationTest extends Application{
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
             rs = st.executeQuery("SELECT price FROM product WHERE id='123456789'");
-            while(rs.next()) {
+            while(rs.next()){
                 price1 = rs.getFloat("price");
                 System.out.println(rs.toString());
             }
@@ -88,6 +88,7 @@ public class ApplicationTest extends Application{
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
         assertEquals(12.34, price1,0.01);
     }
 
@@ -96,7 +97,6 @@ public class ApplicationTest extends Application{
         myDriver = "com.mysql.jdbc.Driver";
         myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
-
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myURL, "root", "");
         Statement st = conn.createStatement();
