@@ -47,7 +47,7 @@ public class ApplicationTest extends Application{
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
             st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ "123456789" +"','"+ "akshay"+"','"+"kumar"+"','"+"ak@gmail.com"+"')");
             conn.close();
-            rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gm.com\'");
+            rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gmail.com\'");
             while(rs.next()) {
                 name1 = rs.getString("fname");
                 System.out.println(rs.toString());
@@ -94,6 +94,9 @@ public class ApplicationTest extends Application{
 
     @Test
     public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
+        myDriver = "com.mysql.jdbc.Driver";
+        myURL = "jdbc:mysql://localhost/mydatabase";
+        ResultSet rs = null;
 
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myURL, "root", "");
@@ -107,7 +110,7 @@ public class ApplicationTest extends Application{
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
         }
-        ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = "+"'123456789'"+" AND price_sold = -1 ;");
+        rs = st.executeQuery("SELECT COUNT(*) FROM product AS NUMBER_OF_PROD WHERE user_id = " + "'123456789'" + " AND price_sold = -1 ;");
         boolean limitReached=false;
         while(rs.next()){
             if (rs.getInt("NUMBER_OF_PROD")>100) {
