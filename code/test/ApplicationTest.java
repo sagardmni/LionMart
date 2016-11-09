@@ -78,8 +78,10 @@ public class ApplicationTest extends Application{
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
             rs = st.executeQuery("SELECT price FROM product WHERE id='123456789';");
-            rs.next();
-            price1 = rs.getFloat("price");
+            if(rs.next()){
+                price1 = rs.getFloat(1);
+            }
+
             System.out.println(price1);
             conn.close();
         } catch (SQLException e) {
