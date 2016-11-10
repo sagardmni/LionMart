@@ -7,6 +7,7 @@ import controllers.Application;
 import play.db.Database;
 import play.db.Databases;
 import java.util.Date;
+import java.text.DecimalFormat;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -37,11 +38,11 @@ public class ApplicationTest extends Application{
     @Test
     public void UserRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/mydatabase";
+        myURL = "jdbc:mysql://localhost/database1";
         ResultSet rs = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "root", "");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), fbEmail VARCHAR(60))");
             st.executeUpdate("INSERT INTO user(id, fname, lname, fbEmail) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
@@ -51,6 +52,7 @@ public class ApplicationTest extends Application{
                 name1 = rs.getString("fname");
                 System.out.println(rs.toString());
             }
+            st.executeUpdate("DROP TABLE user;");
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,11 +66,11 @@ public class ApplicationTest extends Application{
     @Test
     public void ProductRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/mydatabase";
+        myURL = "jdbc:mysql://localhost/database1";
         ResultSet rs = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "root", "");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             Date d1 = new Date();
             Date d2 = new Date();
@@ -77,29 +79,32 @@ public class ApplicationTest extends Application{
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT '-1.00',product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
-            rs = st.executeQuery("SELECT price FROM product WHERE id='123456789';");
-            while(rs.next()){
+            rs = st.executeQuery("SELECT price FROM product WHERE id=1234;");
+            if(rs.next()){
                 price1 = rs.getFloat("price");
             }
+            DecimalFormat twoDForm = new DecimalFormat("#.##");
+            price1 = Float.valueOf(twoDForm.format(price1));
             System.out.println(price1);
+            st.executeUpdate("DROP TABLE product;");
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals(12.34, price1,0.00);
+        assertEquals(12.34f, price1,0);
     }
 
     @Test
     public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/mydatabase";
+        myURL = "jdbc:mysql://localhost/database1";
         int numRows = 0;
         ResultSet rs = null;
         boolean limitReached=false;
         Class.forName(myDriver);
-        Connection conn = DriverManager.getConnection(myURL, "root", "");
+        Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
         Statement st = conn.createStatement();
         Date d1 = new Date();
         Date d2 = new Date();
@@ -107,19 +112,19 @@ public class ApplicationTest extends Application{
         st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price FLOAT (8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought FLOAT(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold FLOAT(8,2) DEFAULT '-1.00',product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
 
         for(int i=0;i<=100;i++){
-            prodArray[i] = new Product(i,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            prodArray[i] = new Product(i,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", -1,2,2,2,"Mudd");
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
         }
-        rs = st.executeQuery("SELECT COUNT(*) AS NUM_ROWS FROM product WHERE user_id = '123456789' AND price_sold = '-1.00';");
+        rs = st.executeQuery("SELECT COUNT(*) FROM product WHERE user_id = '123456789' AND price_sold = -1;");
         if(rs.next()){
-            numRows = rs.getInt("NUM_ROWS");
+            numRows = rs.getInt(1);
             System.out.println(numRows);
         }
         if (numRows>99) {
             limitReached = true;
         }
-
+        st.executeUpdate("DROP TABLE product;");
         conn.close();
         assertTrue(limitReached);
     }
