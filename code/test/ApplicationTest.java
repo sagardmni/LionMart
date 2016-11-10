@@ -38,11 +38,11 @@ public class ApplicationTest extends Application{
     @Test
     public void UserRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/database1";
+        myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
+            Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), fbEmail VARCHAR(60))");
             st.executeUpdate("INSERT INTO user(id, fname, lname, fbEmail) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
@@ -66,11 +66,11 @@ public class ApplicationTest extends Application{
     @Test
     public void ProductRetrieveCheck() {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/database1";
+        myURL = "jdbc:mysql://localhost/mydatabase";
         ResultSet rs = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
+            Connection conn = DriverManager.getConnection(myURL, "root", "");
             Statement st = conn.createStatement();
             Date d1 = new Date();
             Date d2 = new Date();
@@ -99,12 +99,12 @@ public class ApplicationTest extends Application{
     @Test
     public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/database1";
+        myURL = "jdbc:mysql://localhost/mydatabase";
         int numRows = 0;
         ResultSet rs = null;
         boolean limitReached=false;
         Class.forName(myDriver);
-        Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
+        Connection conn = DriverManager.getConnection(myURL, "root", "");
         Statement st = conn.createStatement();
         Date d1 = new Date();
         Date d2 = new Date();
