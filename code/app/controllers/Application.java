@@ -55,6 +55,10 @@ public class Application extends Controller {
         return ok(postItem.render());
     }
 
+    public Result postItem2(){
+        return ok(postItem2.render());
+    }
+
     public Result displayProductLimitError(){
         return ok(productLimit.render());
     }
