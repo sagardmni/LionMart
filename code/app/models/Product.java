@@ -1,5 +1,9 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -163,5 +167,25 @@ public class Product {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean addProductToDatabase() throws ClassNotFoundException {
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+
+        try {
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            //TODO img path
+            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
+            st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"')");
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
