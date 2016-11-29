@@ -104,8 +104,8 @@
                         </div>
                         <tr>
                             <td>
-                                <form method="POST" action="@routes.Application.contactSeller()">
-                                    <button>Contact Seller</button>
+                                <form method="GET" action="@routes.Application.editItem()">
+                                    <button id="@product.getId()" name="button" value="@product.getId()">Edit Item</button>
                                 </form>
                             </td>
                         </tr>

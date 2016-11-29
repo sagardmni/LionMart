@@ -103,8 +103,27 @@ public class Application extends Controller {
         return ok(viewItem.render());
     }
 
-    public Result editItem(){
-        return ok(editItem.render());
+    public Result editItem() throws ClassNotFoundException{
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        int productID = Integer.parseInt(dynamicForm.get("button"));
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        Product currentProduct = null;
+        try {
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT -1,product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE id="+ productID);
+            if(rs.next()){
+                currentProduct = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+            }
+            conn.close();
+            return ok(editItem.render(currentProduct));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Result markSold(){
