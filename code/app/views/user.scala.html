@@ -21,14 +21,16 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-                            var uid = response.authResponse.userID;
-                            var accessToken = response.authResponse.accessToken;
-                            console.log(uid);
-                            getUserData();
+//                            var uid = response.authResponse.userID;
+//                            var accessToken = response.authResponse.accessToken;
+//                            console.log(uid);
+//                            getUserData();
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
+                            gotoHome();
                         } else {
                             console.log("not logged in");
+                            gotoHome();
                         }
                     });
                     function getUserData(){
@@ -37,11 +39,18 @@
                             var fbID = response.id;
                             var fbName = response.name;
                             var fbEmail = response.email;
-                            var baseURL = window.location.href.slice(0,-1);
-                            console.log(baseURL);
-                            console.log(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
-                            window.location.replace(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            var baseURL = window.location.href;
+                            var parts = baseURL.split('/');
+                            console.log(parts[0]);
+                            console.log(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            window.location.replace(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
                         });
+                    }
+                    function gotoHome(){
+                        var currentURL = window.location.href;
+                        var parts = currentURL.split('/');
+                        baseURL = parts[0] + "/";
+                        window.location.replace(baseURL);
                     }
                 };
                 (function(d, s, id){
@@ -60,8 +69,6 @@
 
         <h1 class="centerBoldText">Welcome to LionMart</h1>
         <strong>FURNITURE | TICKETS | BOOKS | ELECTRONICS</strong>
-        <div class="fb-login-button" data-size="xlarge"  scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
-
         <br><br>
         <div style="text-align:center">
             <h1>Name</h1>
@@ -110,41 +117,6 @@
                 </tbody>
             </table>
         </div>
-
-        <div style="text-align:center">
-            @if(pagenum != 0) {
-                <form method="GET" id="change-url-form2" name="change-url-form2" action="@routes.Application.main(1000)">
-                    <input type='submit' style="width:200px" value='<-Previous' onclick="changeURL(-1)" />
-                </form>
-            }
-            @if(product_list.length == 20) {
-                <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.main(1000)">
-                    <input type='submit' style="width: 200px" value='Next->' onclick="changeURL(1)" />
-                </form>
-            }
-        </div>
-
-        <script>
-            function changeURL(change) {
-                var currentURL = window.location.href;
-                var parts = currentURL.split('/');
-                var newURL= "";
-                for(var iter=0;iter<parts.length-1;iter++){
-                    newURL += parts[iter];
-                    newURL += '/';
-                }
-                var currentIndex = parts[parts.length - 1];
-                currentIndex.split('?');
-                newURL += (parseInt(currentIndex) + change).toString();
-                if(change==1) {
-                    document['change-url-form'].action = newURL;
-                }
-                else{
-                    document['change-url-form2'].action = newURL;
-                }
-            }
-    </script>
-
 
         <footer class="centerBoldText" style="font-size:20px">
             <p>LionMart</p>
