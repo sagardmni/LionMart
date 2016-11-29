@@ -1,4 +1,4 @@
-@(product_list: List[models.Product], pagenum: Integer)
+@(product_list: List[models.Product], category: Integer, pagenum: Integer)
 <!DOCTYPE html>
 
 <html>
@@ -37,7 +37,8 @@
                             var fbID = response.id;
                             var fbName = response.name;
                             var fbEmail = response.email;
-                            var baseURL = window.location.href.slice(0,-1);
+                            var parts = window.location.href.split("/");
+                            baseURL = parts[0];
                             console.log(baseURL);
                             console.log(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
                             window.location.replace(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
@@ -59,7 +60,23 @@
 
 
         <h1 class="centerBoldText">Welcome to LionMart</h1>
-    <strong>FURNITURE | TICKETS | BOOKS | ELECTRONICS</strong>
+        <strong>
+            @if(category!=0) {
+                <a href="@routes.Application.main(0, 0)">ALL</a> |
+            }
+            @if(category!=1) {
+                <a href="@routes.Application.main(0, 1)">FURNITURE</a> |
+            }
+            @if(category!=2) {
+                <a href="@routes.Application.main(0, 2)">TICKETS</a> |
+            }
+            @if(category!=3) {
+                <a href="@routes.Application.main(0, 3)">BOOKS</a>
+            }
+            @if(category!=4) {
+                | <a href="@routes.Application.main(0, 4)">ELECTRONICS</a>
+            }
+        </strong>
         <div class="fb-login-button" data-size="xlarge"  scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
 
     <br><br>

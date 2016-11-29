@@ -1,4 +1,4 @@
-@(product_list: List[models.Product], pagenum: Integer)
+@(product_list: List[models.Product], category: Integer, pagenum: Integer)
 <!DOCTYPE html>
 
 <html>
@@ -21,10 +21,7 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-//                            var uid = response.authResponse.userID;
-//                            var accessToken = response.authResponse.accessToken;
-//                            console.log(uid);
-//                            getUserData();
+                            //Do nothing
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
                             gotoHome();
@@ -33,18 +30,6 @@
                             gotoHome();
                         }
                     });
-                    function getUserData(){
-
-                        FB.api('/me', {fields: 'name,email'},function (response) {
-                            var fbID = response.id;
-                            var fbName = response.name;
-                            var fbEmail = response.email;
-                            var baseURL = window.location.href.slice(0,-1);
-                            console.log(baseURL);
-                            console.log(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
-                            window.location.replace(baseURL+"addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
-                        });
-                    }
 
                     function gotoHome(){
                         var currentURL = window.location.href;
@@ -64,7 +49,23 @@
         </script>
     <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
     <h1 class="centerBoldText">Welcome to LionMart</h1>
-    <strong>FURNITURE | TICKETS | BOOKS | ELECTRONICS</strong>
+    <strong>
+    @if(category!=0) {
+        <a href="@routes.Application.displayProducts(0, 0)">ALL</a> |
+    }
+    @if(category!=1) {
+        <a href="@routes.Application.displayProducts(0, 1)">FURNITURE</a> |
+    }
+    @if(category!=2) {
+        <a href="@routes.Application.displayProducts(0, 2)">TICKETS</a> |
+    }
+    @if(category!=3) {
+        <a href="@routes.Application.displayProducts(0, 3)">BOOKS</a>
+    }
+    @if(category!=4) {
+        | <a href="@routes.Application.displayProducts(0, 4)">ELECTRONICS</a>
+    }
+    </strong>
     <span style="font-size: 20px; float: right;"><a href="/user"><strong>Profile</strong></a></span>
     <br><br>
     <form method="GET" action="@routes.Application.postItem()">

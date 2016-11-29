@@ -18,9 +18,9 @@ public class Application extends Controller {
     private String currentFbID = "-1";
 
     public Result index(){
-        return redirect(routes.Application.main(0));
+        return redirect(routes.Application.main(0,0));
     }
-    public Result main(int pagenum) {
+    public Result main(int pagenum, int category) {
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
@@ -30,8 +30,11 @@ public class Application extends Controller {
             Statement st = conn.createStatement();
             int offset = pagenum*20;
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
-            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
-
+            ResultSet rs;
+            if (category == 0)
+                rs = st.executeQuery("SELECT * FROM product ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
+            else
+                rs = st.executeQuery("SELECT * FROM product where category=" + category +" ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
             while(rs.next()){
                 Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
                 displayList.add(obj);
@@ -44,7 +47,7 @@ public class Application extends Controller {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return ok(main.render(displayList,pagenum));
+        return ok(main.render(displayList, category, pagenum));
     }
 
     public Result contactSeller() {
@@ -89,11 +92,11 @@ public class Application extends Controller {
         {
             e.printStackTrace();
         }
-        return redirect(routes.Application.displayProducts(0));
+        return redirect(routes.Application.displayProducts(0,0));
     }
 
     public Result processSoldItem(){
-        return redirect(routes.Application.displayProducts(0));
+        return redirect(routes.Application.displayProducts(0,0));
     }
 
     public Result viewItem(){
@@ -157,17 +160,17 @@ public class Application extends Controller {
 //        }
         currentFbID = fbID;
         if(checkIfUserExists(fbID)){
-            return redirect(routes.Application.displayProducts(0));
+            return redirect(routes.Application.displayProducts(0,0));
         }
         String[] nameSplit = fbName.split(" ");
         String fname = nameSplit[0];
         String lname = nameSplit[1];
         User newUser = new User(Long.parseLong(fbID),fname,lname,fbEmail);
         if(newUser.addToDatabase()){
-            return redirect(routes.Application.displayProducts(0));
+            return redirect(routes.Application.displayProducts(0,0));
         }
         else{
-            return redirect(routes.Application.main(0));
+            return redirect(routes.Application.main(0,0));
         }
     }
 
@@ -226,9 +229,9 @@ public class Application extends Controller {
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery("SELECT COUNT(*) from product WHERE user_id = '"+id+"' AND price_sold = -1 ;");
-            if(rs.next()){
-                if (rs.getInt(1)>99) {
+            ResultSet rs = st.executeQuery("SELECT COUNT(*) from product WHERE user_id = '" + id + "' AND price_sold = -1 ;");
+            if (rs.next()) {
+                if (rs.getInt(1) > 99) {
                     return true;
                 }
                 return false;
@@ -241,7 +244,7 @@ public class Application extends Controller {
         return false;
     }
 
-    public Result displayProducts(int pagenum) throws ClassNotFoundException {
+    public Result displayProducts(int pagenum, int category) throws ClassNotFoundException {
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
@@ -251,14 +254,17 @@ public class Application extends Controller {
             Statement st = conn.createStatement();
             int offset = pagenum*20;
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT -1,product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
-            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
-
+            ResultSet rs;
+            if(category == 0)
+                rs = st.executeQuery("SELECT * FROM product WHERE user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
+            else
+                rs = st.executeQuery("SELECT * FROM product WHERE category=" +category+ " and user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
             while(rs.next()){
                 Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
                 displayList.add(obj);
             }
             conn.close();
-            return ok(home.render(displayList,pagenum));
+            return ok(home.render(displayList,category,pagenum));
 
         } catch (SQLException e) {
             e.printStackTrace();
