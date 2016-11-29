@@ -1,11 +1,10 @@
 package models;
 
 import controllers.routes;
+import views.html.home;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Created by akshay on 10/29/2016.
@@ -76,5 +75,29 @@ public class User {
             return false;
         }
     }
+
+//    public ArrayList<Product> getProductsUploaded() throws ClassNotFoundException {
+//        ArrayList<Product> productList = new ArrayList<Product>();
+//        String myDriver = "com.mysql.jdbc.Driver";
+//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+//        try {
+//            Class.forName(myDriver);
+//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+//            Statement st = conn.createStatement();
+//            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2) DEFAULT -1,product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+//            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE user_id='"+ this.fbId+"' ORDER BY date_upload DESC");
+//
+//            while(rs.next()){
+//                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+//                productList.add(obj);
+//            }
+//            conn.close();
+//            return productList;
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
 }
