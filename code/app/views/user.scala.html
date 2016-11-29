@@ -1,4 +1,4 @@
-@(userProductList: List[models.Product])
+@(userProductList: List[models.Product], user: models.User)
 <!DOCTYPE html>
 
 <html>
@@ -21,10 +21,7 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-//                            var uid = response.authResponse.userID;
-//                            var accessToken = response.authResponse.accessToken;
-//                            console.log(uid);
-//                            getUserData();
+                            //Do nothing
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
                             gotoHome();
@@ -71,9 +68,9 @@
         <strong>FURNITURE | TICKETS | BOOKS | ELECTRONICS</strong>
         <br><br>
         <div style="text-align:center">
-            <h1>Name</h1>
+            <h1>@user.getFirstName @user.getLastName</h1>
             <br><br>
-            Email: somethinggmail.com
+            Email: @user.getEmail()
             <br><br>
             <a href="/viewItem"><h2>View Item</h2></a>
         </div>
