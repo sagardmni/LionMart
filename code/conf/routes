@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index()
 GET     /addUser                    controllers.Application.addUser(fbID:String, fbName:String, fbEmail:String)
-GET     /home/:pagenum              controllers.Application.displayProducts(pagenum: Int, category: Int ?= 1)
+GET     /home/:pagenum              controllers.Application.displayProducts(pagenum: Int, category: Int ?= 0)
 POST    /contact                    controllers.Application.contactSeller()
 GET     /postItem                   controllers.Application.postItem()
 GET     /postItem2                  controllers.Application.postItem2()
@@ -16,7 +16,7 @@ GET     /editItem                   controllers.Application.editItem()
 GET     /markSold                   controllers.Application.markSold()
 POST    /processSoldItem            controllers.Application.processSoldItem()
 GET     /productLimit               controllers.Application.displayProductLimitError()
-GET     /:pagenum                   controllers.Application.main(pagenum: Int, category: Int ?= 1)
+GET     /:pagenum                   controllers.Application.main(pagenum: Int, category: Int ?= 0)
 
 
 # Map static resources from the /public folder to the /assets URL path
