@@ -59,7 +59,9 @@ public class User {
     }
 
     public boolean checkUserConditions(){
-        if(Long.toString(fbId).length() > 25 || firstName.length() > 30 || lastName.length() > 30 || email.length() > 30)
+        if(Long.toString(fbId).length() > 25 || Long.toString(fbId).length() == 0 || firstName.length() > 30
+                || firstName.length() == 0 || lastName.length() > 30 || lastName.length() == 0 || email.length() > 30
+                || email.length() == 0)
             return false;
         return true;
     }

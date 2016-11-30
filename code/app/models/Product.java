@@ -170,8 +170,10 @@ public class Product {
     }
 
     public boolean checkConditions(){
-        if(price > 999999 || imagePath.length()>100 || priceBought > 999999 || description.length() > 65535 ||
-            category > 4 || onlineLink.length() > 255 || condition > 5 || months > 4 || location.length()>255)
+        if(price > 999999 || price < 0 || imagePath.length()>100 || imagePath.length() == 0 || priceBought > 999999
+                || priceBought < 0 || description.length() == 0 || description.length() > 65535 ||
+            category > 4 || category < 1 || onlineLink.length() > 255 || condition > 5 || condition < 1 ||
+                months > 4 || months < 1 || location.length()>255 || location.length() == 0)
             return false;
         return true;
     }
