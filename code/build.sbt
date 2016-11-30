@@ -14,3 +14,4 @@ libraryDependencies ++= Seq(
 )
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.0.8"
 libraryDependencies += "com.google.guava" % "guava" % "19.0"
+libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1.1"

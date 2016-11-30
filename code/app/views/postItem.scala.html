@@ -148,8 +148,8 @@
                     $.ajax({
                         type:  'POST',
                         contentType: 'application/json',
-                        dataType: 'text',
-                        data: "1",
+                        dataType: 'json',
+                        data: JSON.stringify('{"category":"1"}'),
                         url: "@routes.Application.predictPrice()",
                         success: function(json){
                             console.log(json);

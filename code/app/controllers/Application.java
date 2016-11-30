@@ -1,22 +1,36 @@
 package controllers;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonPointer;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ValueNode;
+import com.fasterxml.jackson.databind.util.RawValue;
+
 import models.Product;
 import models.User;
 import play.mvc.*;
 import play.db.jpa.*;
+import scala.util.parsing.json.JSONObject;
+import scala.util.parsing.json.JSONObject$;
 import views.html.*;
-import play.data.FormFactory;
-import javax.inject.Inject;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
 import play.data.DynamicForm;
 import play.data.Form;
-import play.libs.Json;
-import play.libs.Json.*;
-
-import static play.libs.Json.toJson;
 
 public class Application extends Controller {
 
@@ -107,8 +121,11 @@ public class Application extends Controller {
         JsonNode x = request().body().asJson();
 //        int category = x.findPath("category").intValue();
 //        System.out.println(category);
-        List<Integer> myInts = new ArrayList();
-        return ok("Say hello");
+//        List<Integer> myInts = new ArrayList();
+        org.json.simple.JSONObject ab = new org.json.simple.JSONObject();
+        ab.put("value","3");
+
+        return ok(ab.toString());
 
 //        String myDriver = "com.mysql.jdbc.Driver";
 //        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
@@ -133,6 +150,7 @@ public class Application extends Controller {
 //            System.out.println(-1);
 //        }
 //        return ok();
+
     }
 
     public Result processSoldItem(){
