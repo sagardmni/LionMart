@@ -37,161 +37,165 @@ public class ApplicationTest extends Application{
 
 
     @Test
-    public void UserRetrieveCheck() {
-        myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost/mydatabase";
-        ResultSet rs = null;
+    public void ValidUserInsertRetrieveCheck() {
         try {
-            Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "root", "");
-            Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), fbEmail VARCHAR(60))");
-            st.executeUpdate("INSERT INTO user(id, fname, lname, fbEmail) VALUES ('123456789','akshay','kumar','ak@gmail.com')");
-
-            rs = st.executeQuery("SELECT fname FROM user WHERE fbEmail=\'ak@gmail.com\'");
-            while(rs.next()) {
-                name1 = rs.getString("fname");
-                System.out.println(rs.toString());
-            }
-            st.executeUpdate("DROP TABLE user;");
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals("akshay", name1);
-    }
-
-    @Test
-    public void ValidProductInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            assertTrue(p.addProductToDatabase(true));
+            User u = new User(123456789,"akshay","kumar","ak@gmail.com");
+            assertTrue(u.addToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void InvalidPriceProductInsertRetrieveCheck() {
+    public void InvalidNameLengthRetrieveCheck() {
         try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            int invalidPrice = 1000000;
-            Product p = new Product(1234,"123456789","defaultImagePath", invalidPrice,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
+            String invalidFname = new String(new char[31]).replace("\0", "a");
+            User u = new User(123456789,invalidFname,"kumar","ak@gmail.com");
+            assertFalse(u.addToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void InvalidPriceBoughtProductInsertRetrieveCheck() {
+    public void InvalidEmailLengthRetrieveCheck() {
         try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            int invalidPriceBought = 1000000;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, invalidPriceBought,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
+            String invalidEmail = new String(new char[31]).replace("\0", "a");
+            User u = new User(123456789,"akshay","kumar",invalidEmail);
+            assertFalse(u.addToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    @Test
-    public void InvalidImagepathProductInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            String imagePath = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789",imagePath, 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductConditionInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            int invalidCondition = 6;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,invalidCondition,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductMonthsInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            int invalidMonths = 5;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,invalidMonths,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductCategoryInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            int invalidCategory = 5;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,invalidCategory,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductDescriptionInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            String invalidDescription = new String(new char[65536]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,invalidDescription,d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductLocationInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            String location = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,location);
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
-    public void InvalidProductLinkInsertRetrieveCheck() {
-        try {
-            Date d1 = new Date();
-            Date d2 = new Date();
-            String invalidLink = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,invalidLink, 11.00f,2,2,2,"Mudd");
-            assertFalse(p.addProductToDatabase(true));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    public void ValidProductInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+//            assertTrue(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidPriceProductInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            int invalidPrice = 1000000;
+//            Product p = new Product(1234,"123456789","defaultImagePath", invalidPrice,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidPriceBoughtProductInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            int invalidPriceBought = 1000000;
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, invalidPriceBought,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidImagepathProductInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            String imagePath = new String(new char[256]).replace("\0", "a");
+//            Product p = new Product(1234,"123456789",imagePath, 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductConditionInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            int invalidCondition = 6;
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,invalidCondition,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductMonthsInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            int invalidMonths = 5;
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,invalidMonths,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductCategoryInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            int invalidCategory = 5;
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,invalidCategory,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductDescriptionInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            String invalidDescription = new String(new char[65536]).replace("\0", "a");
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,invalidDescription,d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductLocationInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            String location = new String(new char[256]).replace("\0", "a");
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,location);
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Test
+//    public void InvalidProductLinkInsertRetrieveCheck() {
+//        try {
+//            Date d1 = new Date();
+//            Date d2 = new Date();
+//            String invalidLink = new String(new char[256]).replace("\0", "a");
+//            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,invalidLink, 11.00f,2,2,2,"Mudd");
+//            assertFalse(p.addProductToDatabase(true));
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 //    @Test
 //    public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {

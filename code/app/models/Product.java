@@ -169,10 +169,6 @@ public class Product {
         this.location = location;
     }
 
-    public boolean addProductToDatabase() throws ClassNotFoundException {
-        return addProductToDatabase(false);
-    }
-
     public boolean checkConditions(){
         if(price > 999999 || imagePath.length()>100 || priceBought > 999999 || description.length() > 65535 ||
             category > 4 || onlineLink.length() > 255 || condition > 5 || months > 4 || location.length()>255)
@@ -180,18 +176,22 @@ public class Product {
         return true;
     }
 
+    public boolean addProductToDatabase() throws ClassNotFoundException {
+        return addProductToDatabase(false);
+    }
+
     public boolean addProductToDatabase(boolean isTest) throws ClassNotFoundException {
         String myDriver = null;
         String myURL = null;
         Connection conn = null;
         boolean returnVal = true;
-        if(!isTest) {
+        if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+            myURL = "jdbc:mysql://localhost/mydatabase";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost/mydatabase";
+            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
         }
         try {
             Class.forName(myDriver);
