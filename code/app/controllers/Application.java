@@ -13,6 +13,10 @@ import java.util.*;
 import java.util.Date;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
+import play.libs.Json.*;
+
+import static play.libs.Json.toJson;
 
 public class Application extends Controller {
 
@@ -56,7 +60,7 @@ public class Application extends Controller {
     }
 
     public Result postItem(){
-        return ok(postItem.render());
+        return ok(postItem.render(0));
     }
 
     public Result postItem2(){
@@ -97,10 +101,15 @@ public class Application extends Controller {
     }
 
 
+
+    @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
         JsonNode x = request().body().asJson();
-        int category = x.findPath("category").intValue();
-        System.out.println(category);
+//        int category = x.findPath("category").intValue();
+//        System.out.println(category);
+        List<Integer> myInts = new ArrayList();
+        return ok("Say hello");
+
 //        String myDriver = "com.mysql.jdbc.Driver";
 //        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
 //        try {
@@ -119,7 +128,6 @@ public class Application extends Controller {
 //            ratio/=count;
 //            conn.close();
 //            System.out.println(ratio);
-            return ok();
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //            System.out.println(-1);

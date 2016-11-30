@@ -5,7 +5,7 @@
 @import controllers.routes
 @import controllers.routes
 @import controllers.routes
-@()
+@(predictedPrice: Integer)
 
 <!DOCTYPE html>
 
@@ -140,24 +140,25 @@
     </form>
         <button id="predictPrice">Predict Price</button>
 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <div id="div1">something</div>
         <script type="text/javascript">
-            $('#predictPrice').click(function(evt) {
-                $('#errors').hide();
-                $.ajax({
-                    type : 'POST',
-                    url : "@routes.Application.predictPrice()",
-                    data : {category:$('#item_category option:selected').text(),originalPrice:$('#originalPrice').text()}
-                    dataType : "text",
-                    success : function(data) {
-                        //setError('Call succedded');
-                        $('#price').attr("value", data)
-                    },
-                    error : function(data) {
-                        setError('Make call failed');
-                    }
-                });
-                return false;
-            });
+                $("#predictPrice").click(function(){
+                    $.ajax({
+                        type:  'POST',
+                        contentType: 'application/json',
+                        dataType: 'text',
+                        data: "1",
+                        url: "@routes.Application.predictPrice()",
+                        success: function(json){
+                            console.log(json);
+                            $("#div1").html("blah");
+                        },
+                        error: function (result) {
+                            console.log("error");
+                        },
+                    })});
         </script>
     </body>
     </html>
