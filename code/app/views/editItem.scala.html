@@ -20,11 +20,11 @@
                     <td>Condition (5=Excellent):</td>
                     <td>
                         <select id="item_condition" name="item_condition" style="width:100%">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            <option value="1" @if(product.getCondition()==1){selected = "selected"}>1</option>
+                            <option value="2" @if(product.getCondition()==2){selected = "selected"} >2</option>
+                            <option value="3" @if(product.getCondition()==3){selected = "selected"} >3</option>
+                            <option value="4" @if(product.getCondition()==4){selected = "selected"} >4</option>
+                            <option value="5" @if(product.getCondition()==5){selected = "selected"} >5</option>
                         </select>
                     </td>
                 </tr>
@@ -32,41 +32,41 @@
                     <td>Months used:</td>
                     <td>
                         <select name="item_months" style="width:100%">
-                            <option value="0">Less than 3 months old</option>
-                            <option value="1">3-6 months old</option>
-                            <option value="2">6 months - 3 years</option>
-                            <option value="3"> >3 years</option>
+                            <option value="0" @if(product.getMonths()==1){selected = "selected"} >Less than 3 months old</option>
+                            <option value="1" @if(product.getMonths()==2){selected = "selected"} >3-6 months old</option>
+                            <option value="2" @if(product.getMonths()==3){selected = "selected"} >6 months - 3 years</option>
+                            <option value="3" @if(product.getMonths()==4){selected = "selected"}> >3 years</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>Price:</td>
-                    <td><input type="number" min="0" max="999999" name="price" style="width:20%;float:left" required>
+                    <td><input type="number" min="0" max="999999" name="price" style="width:20%;float:left" value="@product.getPrice()" required>
                         <div style="float:left">$</div></td>
                 </tr>
                 <tr>
                     <td>Original Price:</td>
-                    <td><input type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" required>
+                    <td><input type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" value="@product.getPriceBought()" required>
                         <div style="float:left">$</div></td>
                 </tr>
                 <tr>
                     <td>Category:</td>
                     <td>
                         <select name="item_category" style="width:100%">
-                            <option value="1">Furniture</option>
-                            <option value="2">Tickets</option>
-                            <option value="3">Books</option>
-                            <option value="4">Electronics</option>
+                            <option value="1" @if(product.getCategory()==1){selected = "selected"}>Furniture</option>
+                            <option value="2" @if(product.getCategory()==2){selected = "selected"} >Tickets</option>
+                            <option value="3" @if(product.getCategory()==3){selected = "selected"}>Books</option>
+                            <option value="4" @if(product.getCategory()==4){selected = "selected"}>Electronics</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>Online Link (optional) :</td>
-                    <td><input type="url" maxlength="255" name="item_link" style="width:100%"></td>
+                    <td><input type="url" maxlength="255" name="item_link" style="width:100%" value = "@product.getOnlineLink()"></td>
                 </tr>
                 <tr>
                     <td>Location:</td>
-                    <td><input type="text" maxlength="255" name="item_location" style="width:100%" required></td>
+                    <td><input type="text" maxlength="255" name="item_location" style="width:100%" value="@product.getLocation()" required></td>
                 </tr>
             </tbody>
         </table>

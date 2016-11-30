@@ -157,12 +157,10 @@ public class Application extends Controller {
             e.printStackTrace();
             return null;
         }
-
     }
 
     @Transactional
     public Result addUser(String fbID, String fbName, String fbEmail) throws ClassNotFoundException {
-
 //    <<<<<<<<<  SHIFTED TO CLASS >>>>>>
 //        String myDriver = "com.mysql.jdbc.Driver";
 //        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
