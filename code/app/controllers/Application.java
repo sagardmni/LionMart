@@ -1,5 +1,6 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Product;
 import models.User;
 import play.mvc.*;
@@ -95,29 +96,35 @@ public class Application extends Controller {
         return redirect(routes.Application.displayProducts(0,0));
     }
 
-    public double predictPrice(int category) throws ClassNotFoundException{
-        String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
-        try {
-            Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE category="+ category + " ORDER BY date_upload DESC LIMIT 5");
-            double ratio = 0;
-            int count = 0;
-            while(rs.next()){
-                float priceBought = rs.getFloat("price_bought");
-                float priceSold = rs.getFloat("price");
-                ratio += priceBought/priceSold;
-                count +=1;
-            }
-            ratio/=count;
-            conn.close();
-            return ratio;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+
+    public Result predictPrice() throws ClassNotFoundException{
+        JsonNode x = request().body().asJson();
+        int category = x.findPath("category").intValue();
+        System.out.println(category);
+//        String myDriver = "com.mysql.jdbc.Driver";
+//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+//        try {
+//            Class.forName(myDriver);
+//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+//            Statement st = conn.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE category="+ category + " ORDER BY date_upload DESC LIMIT 5");
+//            double ratio = 0;
+//            int count = 0;
+//            while(rs.next()){
+//                float priceBought = rs.getFloat("price_bought");
+//                float priceSold = rs.getFloat("price");
+//                ratio += priceBought/priceSold;
+//                count +=1;
+//            }
+//            ratio/=count;
+//            conn.close();
+//            System.out.println(ratio);
+            return ok();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            System.out.println(-1);
+//        }
+//        return ok();
     }
 
     public Result processSoldItem(){
