@@ -144,10 +144,12 @@
 
         <div id="div1">something</div>
         <script type="text/javascript">
-                var categoryJson = {
-                    category: 3,
-                };
                 $("#predictPrice").click(function(){
+                    var currentCategory = $('#item_category option:selected').val();
+                    console.log("Current category: "+currentCategory);
+                    var categoryJson = {
+                        category: parseInt(currentCategory)
+                    };
                     $.ajax({
                         type:  'POST',
                         contentType: 'application/json',
