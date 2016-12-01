@@ -12,6 +12,7 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <body>
         <script>
@@ -32,6 +33,7 @@
 //                            var accessToken = response.authResponse.accessToken;
 //                            console.log(uid);
 //                            getUserData();
+                            $("#logoutButton").show();
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
                             gotoHome();
@@ -53,13 +55,19 @@
                         });
                     }
 
-                    function gotoHome(){
-                        var currentURL = window.location.href;
-                        var parts = currentURL.split('/');
-                        baseURL = parts[0] + "/";
-                        window.location.replace(baseURL);
-                    }
+
                 };
+                function gotoHome(){
+                    var currentURL = window.location.href;
+                    var parts = currentURL.split('/');
+                    baseURL = parts[0] + "/";
+                    window.location.replace(baseURL);
+                }
+                function logoutUser(){
+                    FB.logout(function (response) {
+                        gotoHome();
+                    });
+                }
                 
                 (function(d, s, id){
                     var js, fjs = d.getElementsByTagName(s)[0];
@@ -69,6 +77,7 @@
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
         </script>
+        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
 
         <h1 style="text-align:center">Post Item</h1>
     <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
