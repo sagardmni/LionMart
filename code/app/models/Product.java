@@ -132,7 +132,7 @@ public class Product {
         months[1] = "3-6 months";
         months[2] = "6 months - 3 years";
         months[3] = ">3 years";
-        return months[this.getMonths()];
+        return months[this.getMonths()-1];
     }
 
     public void setMonths(int months) {

@@ -93,7 +93,7 @@
                 <tr>
                     <td>Condition (5=Excellent):</td>
                     <td>
-                        <select name="item_condition" style="width:100%">
+                        <select id="item_condition" name="item_condition" style="width:100%">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -105,11 +105,11 @@
                 <tr>
                     <td>Months used:</td>
                     <td>
-                        <select name="item_months" style="width:100%">
-                            <option value="0">Less than 3 months old</option>
-                            <option value="1">3-6 months old</option>
-                            <option value="2">6 months - 3 years</option>
-                            <option value="3"> >3 years</option>
+                        <select id="item_months" name="item_months" style="width:100%">
+                            <option value="1">Less than 3 months old</option>
+                            <option value="2">3-6 months old</option>
+                            <option value="3">6 months - 3 years</option>
+                            <option value="4"> >3 years</option>
                         </select>
                     </td>
                 </tr>
@@ -154,10 +154,16 @@
         <div id="div1">something</div>
         <script type="text/javascript">
                 $("#predictPrice").click(function(){
-                    var currentCategory = $('#item_category option:selected').val();
+                    var currentCategory = parseInt($('#item_category option:selected').val());
+                    var currentCondition = parseInt($('#item_condition option:selected').val());
+                    var currentMonths = parseInt($('#item_months option:selected').val());
                     console.log("Current category: "+currentCategory);
+                    console.log("Current condition: "+currentCondition);
+                    console.log("Current months: "+currentMonths);
                     var categoryJson = {
-                        category: parseInt(currentCategory)
+                        category: currentCategory,
+                        condition: currentCondition,
+                        months: currentMonths
                     };
                     $.ajax({
                         type:  'POST',

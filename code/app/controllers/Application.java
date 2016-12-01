@@ -140,6 +140,9 @@ public class Application extends Controller {
     public Result predictPrice() throws ClassNotFoundException{
         JsonNode x = request().body().asJson();
         int category = x.get("category").intValue();
+        int condition = x.get("condition").intValue();
+        int months = x.get("months").intValue();
+        System.out.println(category+","+condition+","+months);
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         double ratio = 0;
