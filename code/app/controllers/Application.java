@@ -160,20 +160,22 @@ public class Application extends Controller {
             } else {
                 flash("error", "Missing file");
             }
-            /////////////////////////////////////////////////////////////////////////
-            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
-            /////////////////////////////////////////////////////////////////////////
-            System.out.println(((String)dynamicForm.asFormUrlEncoded().get("item_description")));
-//            Float price2 = dynamicForm.asFormUrlEncoded().get("price");
-//            System.out.println(price2);
-//            Float op2 = Float.parseFloat(String.valueOf(dynamicForm.asFormUrlEncoded().get("original_price")));
-//            System.out.println(price2+" "+op2);
 
-            Product p = new Product(maxID+1,currentFbID,fileNameSave,2f,((String)dynamicForm.asFormUrlEncoded().get("item_description")),date,date,2 ,((String)dynamicForm.asFormUrlEncoded().get("item_link")), -1, ((Integer)dynamicForm.asFormUrlEncoded().get("item_condition")),((Integer)dynamicForm.asFormUrlEncoded().get("item_months")),((Integer)dynamicForm.asFormUrlEncoded().get("item_category")),((String)dynamicForm.asFormUrlEncoded().get("item_location")));
+            String[] itemDescription = (String[])dynamicForm.asFormUrlEncoded().get("item_description");
+            String[] itemLink = (String[])dynamicForm.asFormUrlEncoded().get("item_link");
+            String[] itemLocation = (String[])dynamicForm.asFormUrlEncoded().get("item_location");
+            String[] itemConditionArr = (String[])dynamicForm.asFormUrlEncoded().get("item_condition");
+            int itemCondition = Integer.parseInt(itemConditionArr[0]);
+            String[] itemMonthsArr = (String[])dynamicForm.asFormUrlEncoded().get("item_months");
+            int itemMonths = Integer.parseInt(itemMonthsArr[0]);
+            String[] itemCategoryArr = (String[])dynamicForm.asFormUrlEncoded().get("item_category");
+            int itemCategory = Integer.parseInt(itemCategoryArr[0]);
+
+            String[] priceArr = (String[])dynamicForm.asFormUrlEncoded().get("price");
+            Float setPrice = Float.parseFloat(priceArr[0]);
+            String[] oriPriceArr = (String[])dynamicForm.asFormUrlEncoded().get("original_price");
+            Float oriPrice = Float.parseFloat(oriPriceArr[0]);
+            Product p = new Product(maxID+1,currentFbID,fileNameSave,setPrice,itemDescription[0],date,date, oriPrice,itemLink[0], -1, itemCondition, itemMonths, itemCategory,itemLocation[0]);
             p.addProductToDatabase();
         }catch(Exception e)
         {
@@ -190,10 +192,12 @@ public class Application extends Controller {
         int category = x.get("category").intValue();
         int condition = x.get("condition").intValue();
         int months = x.get("months").intValue();
+        int originalPrice = x.get("originalPrice").intValue();
         System.out.println(category+","+condition+","+months);
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         double ratio = 0;
+        double predictedPrice = 0;
         try {
             Class.forName(myDriver);
             Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
@@ -203,21 +207,21 @@ public class Application extends Controller {
             while(rs.next()){
                 float priceBought = rs.getFloat("price_bought");
                 float priceSold = rs.getFloat("price");
-                ratio += priceBought/priceSold;
+                ratio += priceSold/priceBought;
                 count +=1;
             }
             if (count!=0)
                 ratio/=count;
             double roundOff = Math.round(ratio * 100.0) / 100.0;
-            ratio = roundOff;
+            predictedPrice = roundOff*originalPrice;
             conn.close();
-            System.out.println(ratio);
+            System.out.println(predictedPrice);
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println(-1);
         }
         org.json.simple.JSONObject ab = new org.json.simple.JSONObject();
-        ab.put("value",Double.toString(ratio));
+        ab.put("value",Double.toString(predictedPrice));
         return ok(ab.toString());
     }
 

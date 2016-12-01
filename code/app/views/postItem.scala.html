@@ -29,10 +29,6 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-//                            var uid = response.authResponse.userID;
-//                            var accessToken = response.authResponse.accessToken;
-//                            console.log(uid);
-//                            getUserData();
                             $("#logoutButton").show();
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
@@ -115,13 +111,13 @@
                 </tr>
                 <tr>
                     <td>Price:</td>
-                    <td><input id="price" type="number" min="0" max="999999" name="price" style="width:20%;float:left" required>
+                    <td><input id="price" type="number" step="0.01" min="0" max="999999" name="price" style="width:20%;float:left" required>
                         <div style="float:left">$</div></td>
                 </tr>
 
                 <tr>
                     <td>Original Price:</td>
-                    <td><input id="originalPrice" type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" required>
+                    <td><input id="originalPrice" step="0.01" type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" required>
                         <div style="float:left">$</div></td>
                 </tr>
                 <tr>
@@ -157,13 +153,16 @@
                     var currentCategory = parseInt($('#item_category option:selected').val());
                     var currentCondition = parseInt($('#item_condition option:selected').val());
                     var currentMonths = parseInt($('#item_months option:selected').val());
+                    var currentOriPrice = parseInt($('#originalPrice').val());
                     console.log("Current category: "+currentCategory);
                     console.log("Current condition: "+currentCondition);
                     console.log("Current months: "+currentMonths);
+                    console.log("Current original price: "+currentOriPrice);
                     var categoryJson = {
                         category: currentCategory,
                         condition: currentCondition,
-                        months: currentMonths
+                        months: currentMonths,
+                        originalPrice: currentOriPrice
                     };
                     $.ajax({
                         type:  'POST',
