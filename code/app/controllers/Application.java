@@ -23,9 +23,14 @@ import scala.util.parsing.json.JSONObject;
 import scala.util.parsing.json.JSONObject$;
 import views.html.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -110,7 +115,7 @@ public class Application extends Controller {
             return displayProductLimitError();
         }
 
-        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        Http.MultipartFormData dynamicForm = request().body().asMultipartFormData();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
 
@@ -124,8 +129,38 @@ public class Application extends Controller {
             if(rs.next()) {
                 maxID = rs.getInt(1);
             }
-            String imagePath = dynamicForm.get("item_picture");
-            Product p = new Product(maxID+1,currentFbID,imagePath,Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
+            String fileName = null;
+            String contentType;
+            String fileNameSave = null;
+            Http.MultipartFormData.FilePart picture = dynamicForm.getFile("item_picture");
+            File file = null;
+            if (picture != null) {
+                fileName = picture.getFilename();
+                contentType = picture.getContentType();
+                file = (File) picture.getFile();
+
+                if(!(contentType.equals("image/png") || !(contentType.equals("image/jpeg")))){
+                    flash("error", "Not an image");
+                }
+                String checkDots = "";
+                checkDots = checkDots.concat(fileName);
+                int numDots = checkDots.length() - checkDots.replace(".", "").length();
+                if(numDots!=1){
+                    flash("error", "Not an image");
+                }
+                System.out.println(fileName);
+                String[] extension = fileName.split(".");
+
+                Path source = Paths.get(file.getAbsolutePath());
+                char separator = File.separatorChar;
+                fileNameSave = (maxID+1)+"."+extension;
+                Path target = Paths.get(Paths.get("").toAbsolutePath().toString()+separator+"app"+separator+"assets"+separator+"images"+separator+fileNameSave);
+                Files.move(source,target, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                flash("error", "Missing file");
+            }
+
+            Product p = new Product(maxID+1,currentFbID,fileNameSave,((Float) dynamicForm.asFormUrlEncoded().get("price")),((String)dynamicForm.asFormUrlEncoded().get("item_description")),date,date, ((Float) dynamicForm.asFormUrlEncoded().get("original_price")),((String)dynamicForm.asFormUrlEncoded().get("item_link")), -1, ((Integer)dynamicForm.asFormUrlEncoded().get("item_condition")),((Integer)dynamicForm.asFormUrlEncoded().get("item_months")),((Integer)dynamicForm.asFormUrlEncoded().get("item_category")),((String)dynamicForm.asFormUrlEncoded().get("item_location")));
             p.addProductToDatabase();
         }catch(Exception e)
         {

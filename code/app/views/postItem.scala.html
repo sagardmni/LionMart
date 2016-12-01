@@ -80,7 +80,7 @@
         <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
 
         <h1 style="text-align:center">Post Item</h1>
-    <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
+    <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center" enctype="multipart/form-data">
         <table align="center" style="width:40%">
             <tbody>
                 <tr>
