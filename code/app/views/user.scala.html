@@ -45,13 +45,18 @@
                             window.location.replace(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
                         });
                     }
-                    function gotoHome(){
-                        var currentURL = window.location.href;
-                        var parts = currentURL.split('/');
-                        baseURL = parts[0] + "/";
-                        window.location.replace(baseURL);
-                    }
                 };
+                function gotoHome(){
+                    var currentURL = window.location.href;
+                    var parts = currentURL.split('/');
+                    baseURL = parts[0] + "/";
+                    window.location.replace(baseURL);
+                }
+                function logoutUser(){
+                    FB.logout(function (response) {
+                        gotoHome();
+                    });
+                }
                 (function(d, s, id){
                     var js, fjs = d.getElementsByTagName(s)[0];
                     if (d.getElementById(id)) {return;}
