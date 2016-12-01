@@ -144,19 +144,22 @@
 
         <div id="div1">something</div>
         <script type="text/javascript">
+                var categoryJson = {
+                    category: 3,
+                };
                 $("#predictPrice").click(function(){
                     $.ajax({
                         type:  'POST',
                         contentType: 'application/json',
                         dataType: 'json',
-                        data: JSON.stringify('{"category":"3"}'),
+                        data: JSON.stringify(categoryJson),
                         url: "@routes.Application.predictPrice()",
                         success: function(json){
                             console.log(json);
                             var parsedString = JSON.stringify(json);
                             var parts = parsedString.split(':');
                             required = parts[1].split('\"');
-                            $("#div1").html(required[1]);
+                            $("#price").val(required[1]);
                         },
                         error: function (result) {
                             console.log("error");

@@ -77,10 +77,6 @@ public class Application extends Controller {
         return ok(postItem.render(0));
     }
 
-    public Result postItem2(){
-        return ok(postItem2.render());
-    }
-
     public Result displayProductLimitError(){
         return ok(productLimit.render());
     }
@@ -143,7 +139,7 @@ public class Application extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
         JsonNode x = request().body().asJson();
-        String category = x.findPath("category").textValue();
+        int category = x.get("category").intValue();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         double ratio = 0;
@@ -161,6 +157,8 @@ public class Application extends Controller {
             }
             if (count!=0)
                 ratio/=count;
+            double roundOff = Math.round(ratio * 100.0) / 100.0;
+            ratio = roundOff;
             conn.close();
             System.out.println(ratio);
         } catch (SQLException e) {
@@ -168,7 +166,7 @@ public class Application extends Controller {
             System.out.println(-1);
         }
         org.json.simple.JSONObject ab = new org.json.simple.JSONObject();
-        ab.put("value",category);
+        ab.put("value",Double.toString(ratio));
         return ok(ab.toString());
     }
 
