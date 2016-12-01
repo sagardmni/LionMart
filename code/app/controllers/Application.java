@@ -85,6 +85,30 @@ public class Application extends Controller {
         return ok(productLimit.render());
     }
 
+    public Result processEditItemForm(long productID) throws ClassNotFoundException {
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+
+        try{
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+//            ResultSet rs = st.executeUpdate("update product set ");
+//            int maxID = 0;
+//            if(rs.next()) {
+//                maxID = rs.getInt(1);
+//            }
+//            String imagePath = dynamicForm.get("item_picture");
+//            Product p = new Product(maxID+1,currentFbID,imagePath,Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
+//            p.addProductToDatabase();
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return redirect(routes.Application.displayProducts(0,0));
+    }
+
     public Result processItemForm() throws ClassNotFoundException {
         if(checkLimitForUser(currentFbID)){
             return displayProductLimitError();
