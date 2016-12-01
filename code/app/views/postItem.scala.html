@@ -149,11 +149,14 @@
                         type:  'POST',
                         contentType: 'application/json',
                         dataType: 'json',
-                        data: JSON.stringify('{"category":"1"}'),
+                        data: JSON.stringify('{"category":"3"}'),
                         url: "@routes.Application.predictPrice()",
                         success: function(json){
                             console.log(json);
-                            $("#div1").html("blah");
+                            var parsedString = JSON.stringify(json);
+                            var parts = parsedString.split(':');
+                            required = parts[1].split('\"');
+                            $("#div1").html(required[1]);
                         },
                         error: function (result) {
                             console.log("error");

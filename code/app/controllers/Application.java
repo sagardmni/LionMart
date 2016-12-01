@@ -119,38 +119,33 @@ public class Application extends Controller {
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
         JsonNode x = request().body().asJson();
-//        int category = x.findPath("category").intValue();
-//        System.out.println(category);
-//        List<Integer> myInts = new ArrayList();
+        String category = x.findPath("category").textValue();
+        String myDriver = "com.mysql.jdbc.Driver";
+        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        double ratio = 0;
+        try {
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE category="+ category + " ORDER BY date_upload DESC LIMIT 5");
+            int count = 0;
+            while(rs.next()){
+                float priceBought = rs.getFloat("price_bought");
+                float priceSold = rs.getFloat("price");
+                ratio += priceBought/priceSold;
+                count +=1;
+            }
+            if (count!=0)
+                ratio/=count;
+            conn.close();
+            System.out.println(ratio);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(-1);
+        }
         org.json.simple.JSONObject ab = new org.json.simple.JSONObject();
-        ab.put("value","3");
-
+        ab.put("value",category);
         return ok(ab.toString());
-
-//        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
-//        try {
-//            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-//            Statement st = conn.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM product WHERE category="+ category + " ORDER BY date_upload DESC LIMIT 5");
-//            double ratio = 0;
-//            int count = 0;
-//            while(rs.next()){
-//                float priceBought = rs.getFloat("price_bought");
-//                float priceSold = rs.getFloat("price");
-//                ratio += priceBought/priceSold;
-//                count +=1;
-//            }
-//            ratio/=count;
-//            conn.close();
-//            System.out.println(ratio);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.out.println(-1);
-//        }
-//        return ok();
-
     }
 
     public Result processSoldItem(){
