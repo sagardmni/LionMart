@@ -189,7 +189,7 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost/mydatabase";
+            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
