@@ -37,6 +37,8 @@ import java.util.Date;
 import play.data.DynamicForm;
 import play.data.Form;
 
+import static java.lang.String.valueOf;
+
 public class Application extends Controller {
 
     private String currentFbID = "-1";
@@ -148,9 +150,8 @@ public class Application extends Controller {
                 if(numDots!=1){
                     flash("error", "Not an image");
                 }
-                System.out.println(fileName);
-                String[] extension = fileName.split(".");
-
+                //System.out.println(fileName);
+                String extension = fileName.split("\\.")[1];
                 Path source = Paths.get(file.getAbsolutePath());
                 char separator = File.separatorChar;
                 fileNameSave = (maxID+1)+"."+extension;
@@ -159,8 +160,20 @@ public class Application extends Controller {
             } else {
                 flash("error", "Missing file");
             }
+            /////////////////////////////////////////////////////////////////////////
+            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            ///////////////////////FIX NEEDED HERE URGENT////////////////////////////
+            /////////////////////////////////////////////////////////////////////////
+            System.out.println(((String)dynamicForm.asFormUrlEncoded().get("item_description")));
+//            Float price2 = dynamicForm.asFormUrlEncoded().get("price");
+//            System.out.println(price2);
+//            Float op2 = Float.parseFloat(String.valueOf(dynamicForm.asFormUrlEncoded().get("original_price")));
+//            System.out.println(price2+" "+op2);
 
-            Product p = new Product(maxID+1,currentFbID,fileNameSave,((Float) dynamicForm.asFormUrlEncoded().get("price")),((String)dynamicForm.asFormUrlEncoded().get("item_description")),date,date, ((Float) dynamicForm.asFormUrlEncoded().get("original_price")),((String)dynamicForm.asFormUrlEncoded().get("item_link")), -1, ((Integer)dynamicForm.asFormUrlEncoded().get("item_condition")),((Integer)dynamicForm.asFormUrlEncoded().get("item_months")),((Integer)dynamicForm.asFormUrlEncoded().get("item_category")),((String)dynamicForm.asFormUrlEncoded().get("item_location")));
+            Product p = new Product(maxID+1,currentFbID,fileNameSave,2f,((String)dynamicForm.asFormUrlEncoded().get("item_description")),date,date,2 ,((String)dynamicForm.asFormUrlEncoded().get("item_link")), -1, ((Integer)dynamicForm.asFormUrlEncoded().get("item_condition")),((Integer)dynamicForm.asFormUrlEncoded().get("item_months")),((Integer)dynamicForm.asFormUrlEncoded().get("item_category")),((String)dynamicForm.asFormUrlEncoded().get("item_location")));
             p.addProductToDatabase();
         }catch(Exception e)
         {
