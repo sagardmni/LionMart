@@ -4,6 +4,7 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
     </head>
     <body>
@@ -21,6 +22,7 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
+                            $("#logoutButton").show();
                             var uid = response.authResponse.userID;
                             var accessToken = response.authResponse.accessToken;
                             console.log(uid);
@@ -45,6 +47,18 @@
                         });
                     }
                 };
+                function gotoHome(){
+                    var currentURL = window.location.href;
+                    var parts = currentURL.split('/');
+                    baseURL = parts[0] + "/";
+                    window.location.replace(baseURL);
+                }
+
+                function logoutUser(){
+                    FB.logout(function (response) {
+                        gotoHome();
+                    });
+                }
                 (function(d, s, id){
                     var js, fjs = d.getElementsByTagName(s)[0];
                     if (d.getElementById(id)) {return;}
@@ -57,9 +71,10 @@
 
         <div id="fb-root"></div>
 
-
+        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
 
         <h1 class="centerBoldText">Welcome to LionMart</h1>
+
         <strong>
             @if(category!=0) {
                 <a href="@routes.Application.main(0, 0)">ALL</a> |
@@ -79,85 +94,86 @@
         </strong>
         <div class="fb-login-button" data-size="xlarge"  scope="public_profile,email" data-show-faces="false" data-auto-logout-link="false"></div>
 
-    <br><br>
-    <div style="border: 1px solid black">
-        <table align="center" style="width:40%">
-            <tbody>
-            @if(!product_list.isEmpty){
-                @for(product <- product_list){
-                    <div>
+
+        <br><br>
+        <div style="border: 1px solid black">
+            <table align="center" style="width:40%">
+                <tbody>
+                @if(!product_list.isEmpty){
+                    @for(product <- product_list){
+                        <div>
+                            <tr>
+                                <td class="image" rowspan="5">
+                                    <a href="/viewItem">
+                                        @*to-do: use the actual image here*@
+                                    <img src='@routes.Assets.at("images/chair.jpg")' alt="chair">
+                                    </a>
+                                </td>
+                                <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
+                            </tr>
+                            <tr>
+                                <td><b>Pick up from: </b> @product.getLocation()</td>
+                            </tr>
+                            <tr>
+                                <td><b>Used for: </b> @product.mapMonthsToString()</td>
+                            </tr>
+                            <tr>
+                                <td><b>Condition rating: </b> @product.getCondition()</td>
+                            </tr>
+                            <tr>
+                                <td><b>Price: </b>@product.getPrice()</td>
+                            </tr>
+                        </div>
                         <tr>
-                            <td class="image" rowspan="5">
-                                <a href="/viewItem">
-                                    @*to-do: use the actual image here*@
-                                <img src='@routes.Assets.at("images/chair.jpg")' alt="chair">
-                                </a>
+                            <td>
+                                <form action="https://www.facebook.com/app_scoped_user_id/@product.getUploadedBy()">
+                                    <button>Contact Seller</button>
+                                </form>
                             </td>
-                            <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
                         </tr>
-                        <tr>
-                            <td><b>Pick up from: </b> @product.getLocation()</td>
-                        </tr>
-                        <tr>
-                            <td><b>Used for: </b> @product.mapMonthsToString()</td>
-                        </tr>
-                        <tr>
-                            <td><b>Condition rating: </b> @product.getCondition()</td>
-                        </tr>
-                        <tr>
-                            <td><b>Price: </b>@product.getPrice()</td>
-                        </tr>
-                    </div>
-                    <tr>
-                        <td>
-                            <form action="https://www.facebook.com/app_scoped_user_id/@product.getUploadedBy()">
-                                <button>Contact Seller</button>
-                            </form>
-                        </td>
-                    </tr>
+                    }
                 }
+                </tbody>
+            </table>
+        </div>
+
+        <div style="text-align:center">
+            @if(pagenum != 0) {
+                <form method="GET" id="change-url-form2" name="change-url-form2" action="@routes.Application.main(1000)">
+                    <input type='submit' style="width:200px" value='<-Previous' onclick="changeURL(-1)" />
+                </form>
             }
-            </tbody>
-        </table>
-    </div>
-
-    <div style="text-align:center">
-        @if(pagenum != 0) {
-            <form method="GET" id="change-url-form2" name="change-url-form2" action="@routes.Application.main(1000)">
-                <input type='submit' style="width:200px" value='<-Previous' onclick="changeURL(-1)" />
-            </form>
-        }
-        @if(product_list.length == 20) {
-            <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.main(1000)">
-                <input type='submit' style="width: 200px" value='Next->' onclick="changeURL(1)" />
-            </form>
-        }
-    </div>
-
-    <script>
-            function changeURL(change) {
-                var currentURL = window.location.href;
-                var parts = currentURL.split('/');
-                var newURL= "";
-                for(var iter=0;iter<parts.length-1;iter++){
-                    newURL += parts[iter];
-                    newURL += '/';
-                }
-                var currentIndex = parts[parts.length - 1];
-                currentIndex.split('?');
-                newURL += (parseInt(currentIndex) + change).toString();
-                if(change==1) {
-                    document['change-url-form'].action = newURL;
-                }
-                else{
-                    document['change-url-form2'].action = newURL;
-                }
+            @if(product_list.length == 20) {
+                <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.main(1000)">
+                    <input type='submit' style="width: 200px" value='Next->' onclick="changeURL(1)" />
+                </form>
             }
-    </script>
+        </div>
+
+        <script>
+                function changeURL(change) {
+                    var currentURL = window.location.href;
+                    var parts = currentURL.split('/');
+                    var newURL= "";
+                    for(var iter=0;iter<parts.length-1;iter++){
+                        newURL += parts[iter];
+                        newURL += '/';
+                    }
+                    var currentIndex = parts[parts.length - 1];
+                    currentIndex.split('?');
+                    newURL += (parseInt(currentIndex) + change).toString();
+                    if(change==1) {
+                        document['change-url-form'].action = newURL;
+                    }
+                    else{
+                        document['change-url-form2'].action = newURL;
+                    }
+                }
+        </script>
 
 
-    <footer class="centerBoldText" style="font-size:20px">
-        <p>LionMart</p>
-    </footer>
+        <footer class="centerBoldText" style="font-size:20px">
+            <p>LionMart</p>
+        </footer>
     </body>
 </html>

@@ -4,77 +4,138 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     </head>
-    <h1 style="text-align:center">Edit Item</h1>
-    <form method="POST" action="@routes.Application.processEditItemForm(product.getId())" style="text-align: center">
-        <table align="center" style="width:40%">
-            <tbody>
-                <tr>
-                    <td colspan="2"><input type="file" name="item_picture" accept="image/*" required></td>
-                </tr>
-                <tr>
-                    <td>Description:</td>
-                    <td><textarea name="item_description" style="width:100%" rows="4" required>@product.getDescription()</textarea></td>
-                </tr>
-                <tr>
-                    <td>Condition (5=Excellent):</td>
-                    <td>
-                        <select id="item_condition" name="item_condition" style="width:100%">
-                            <option value="1" @if(product.getCondition()==1){selected = "selected"}>1</option>
-                            <option value="2" @if(product.getCondition()==2){selected = "selected"} >2</option>
-                            <option value="3" @if(product.getCondition()==3){selected = "selected"} >3</option>
-                            <option value="4" @if(product.getCondition()==4){selected = "selected"} >4</option>
-                            <option value="5" @if(product.getCondition()==5){selected = "selected"} >5</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Months used:</td>
-                    <td>
-                        <select name="item_months" style="width:100%">
-                            <option value="0" @if(product.getMonths()==1){selected = "selected"} >Less than 3 months old</option>
-                            <option value="1" @if(product.getMonths()==2){selected = "selected"} >3-6 months old</option>
-                            <option value="2" @if(product.getMonths()==3){selected = "selected"} >6 months - 3 years</option>
-                            <option value="3" @if(product.getMonths()==4){selected = "selected"}> >3 years</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Price:</td>
-                    <td><input type="number" min="0" max="999999" name="price" style="width:20%;float:left" value="@product.getPrice()" required>
-                        <div style="float:left">$</div></td>
-                </tr>
-                <tr>
-                    <td>Original Price:</td>
-                    <td><input type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" value="@product.getPriceBought()" required>
-                        <div style="float:left">$</div></td>
-                </tr>
-                <tr>
-                    <td>Category:</td>
-                    <td>
-                        <select name="item_category" style="width:100%">
-                            <option value="1" @if(product.getCategory()==1){selected = "selected"}>Furniture</option>
-                            <option value="2" @if(product.getCategory()==2){selected = "selected"} >Tickets</option>
-                            <option value="3" @if(product.getCategory()==3){selected = "selected"}>Books</option>
-                            <option value="4" @if(product.getCategory()==4){selected = "selected"}>Electronics</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Online Link (optional) :</td>
-                    <td><input type="url" maxlength="255" name="item_link" style="width:100%" value = "@product.getOnlineLink()"></td>
-                </tr>
-                <tr>
-                    <td>Location:</td>
-                    <td><input type="text" maxlength="255" name="item_location" style="width:100%" value="@product.getLocation()" required></td>
-                </tr>
-            </tbody>
-        </table>
-        <input type="submit" value="Submit" style="width:200px">
-    </form>
-    <div style="text-align:center">
-        <form action="/markSold" method="GET">
-            <input type="submit" value="Mark as Sold" style="width:200px"/>
+    <body>
+        <script>
+                var FB;
+                window.fbAsyncInit = function() {
+                    FB.init({
+                        appId      : '153128161818624',
+                        xfbml      : true,
+                        version    : 'v2.6'
+                    });
+                    FB.Event.subscribe('auth.login', function()
+                    {
+                        window.location.reload();
+                    });
+                    FB.getLoginStatus(function(response) {
+                        if (response.status === 'connected') {
+                            $("#logoutButton").show();
+                        } else if (response.status === 'not_authorized') {
+                            console.log("not authorized");
+                            gotoHome();
+                        } else {
+                            console.log("not logged in");
+                            gotoHome();
+                        }
+                    });
+                    function getUserData(){
+
+                        FB.api('/me', {fields: 'name,email'},function (response) {
+                            var fbID = response.id;
+                            var fbName = response.name;
+                            var fbEmail = response.email;
+                            var baseURL = window.location.href;
+                            var parts = baseURL.split('/');
+                            console.log(parts[0]);
+                            console.log(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            window.location.replace(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                        });
+                    }
+                    function gotoHome(){
+                        var currentURL = window.location.href;
+                        var parts = currentURL.split('/');
+                        baseURL = parts[0] + "/";
+                        window.location.replace(baseURL);
+                    }
+                };
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+        </script>
+
+
+        <div id="fb-root"></div>
+
+        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
+        <h1 style="text-align:center">Edit Item</h1>
+
+        <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
+            <table align="center" style="width:40%">
+                <tbody>
+                    <tr>
+                        <td colspan="2"><input type="file" name="item_picture" accept="image/*" required></td>
+                    </tr>
+                    <tr>
+                        <td>Description:</td>
+                        <td><textarea name="item_description" style="width:100%" rows="4" required>@product.getDescription()</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Condition (5=Excellent):</td>
+                        <td>
+                            <select id="item_condition" name="item_condition" style="width:100%">
+                                <option value="1" @if(product.getCondition()==1){selected = "selected"}>1</option>
+                                <option value="2" @if(product.getCondition()==2){selected = "selected"} >2</option>
+                                <option value="3" @if(product.getCondition()==3){selected = "selected"} >3</option>
+                                <option value="4" @if(product.getCondition()==4){selected = "selected"} >4</option>
+                                <option value="5" @if(product.getCondition()==5){selected = "selected"} >5</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Months used:</td>
+                        <td>
+                            <select name="item_months" style="width:100%">
+                                <option value="0" @if(product.getMonths()==1){selected = "selected"} >Less than 3 months old</option>
+                                <option value="1" @if(product.getMonths()==2){selected = "selected"} >3-6 months old</option>
+                                <option value="2" @if(product.getMonths()==3){selected = "selected"} >6 months - 3 years</option>
+                                <option value="3" @if(product.getMonths()==4){selected = "selected"}> >3 years</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Price:</td>
+                        <td><input type="number" min="0" max="999999" name="price" style="width:20%;float:left" value="@product.getPrice()" required>
+                            <div style="float:left">$</div></td>
+                    </tr>
+                    <tr>
+                        <td>Original Price:</td>
+                        <td><input type="number" min="0" max="999999" name="original_price" style="width:20%;float:left" value="@product.getPriceBought()" required>
+                            <div style="float:left">$</div></td>
+                    </tr>
+                    <tr>
+                        <td>Category:</td>
+                        <td>
+                            <select name="item_category" style="width:100%">
+                                <option value="1" @if(product.getCategory()==1){selected = "selected"}>Furniture</option>
+                                <option value="2" @if(product.getCategory()==2){selected = "selected"} >Tickets</option>
+                                <option value="3" @if(product.getCategory()==3){selected = "selected"}>Books</option>
+                                <option value="4" @if(product.getCategory()==4){selected = "selected"}>Electronics</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Online Link (optional) :</td>
+                        <td><input type="url" maxlength="255" name="item_link" style="width:100%" value = "@product.getOnlineLink()"></td>
+                    </tr>
+                    <tr>
+                        <td>Location:</td>
+                        <td><input type="text" maxlength="255" name="item_location" style="width:100%" value="@product.getLocation()" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="submit" value="Submit" style="width:200px">
         </form>
-    </div>
+        <div style="text-align:center">
+            <form action="/markSold" method="GET">
+                <input type="submit" value="Mark as Sold" style="width:200px"/>
+            </form>
+        </div>
+    </body>
 </html>

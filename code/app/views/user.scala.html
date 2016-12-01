@@ -4,6 +4,8 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
         <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
     </head>
     <body>
@@ -21,7 +23,7 @@
                     });
                     FB.getLoginStatus(function(response) {
                         if (response.status === 'connected') {
-                            //Do nothing
+                            $("#logoutButton").show();
                         } else if (response.status === 'not_authorized') {
                             console.log("not authorized");
                             gotoHome();
@@ -63,7 +65,7 @@
         <div id="fb-root"></div>
 
 
-
+        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
         <h1 class="centerBoldText">Welcome to LionMart</h1>
         <br><br>
         <div style="text-align:center">
