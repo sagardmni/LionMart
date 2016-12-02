@@ -33,6 +33,7 @@ public class Product {
     public Product(long id, String uploadedBy, String imagePath, float price, String description,
                    Date dateUploaded, Date dateSold, float priceBought, String onlineLink,
                    float soldPrice, int condition, int months, int category, String location) {
+        System.out.println("Got to product constructor");
         this.id = id;
         this.uploadedBy = uploadedBy;
         this.imagePath = imagePath;
@@ -260,10 +261,14 @@ public class Product {
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
             //Check conditions before actually attempting to update into database
             boolean shouldInsert = checkConditions();
-            if (shouldInsert)
-                st.executeUpdate("UPDATE product SET price="+this.getPrice()+",category='"+this.getCategory()+"',price_bought="+this.getPriceBought()+",description='"+this.getDescription()+"',date_upload='"+product_timestamp+"',online_link='"+this.getOnlineLink()+"',price_sold="+this.getSoldPrice()+",product_condition="+this.getCondition()+",months_used="+this.getMonths()+",location='"+this.getLocation()+"' WHERE id="+id);
+
+            if (shouldInsert) {
+                st.executeUpdate("UPDATE product SET price=" + this.getPrice() + ",category='" + this.getCategory() + "',price_bought=" + this.getPriceBought() + ",description='" + this.getDescription() + "',date_upload='" + product_timestamp + "',online_link='" + this.getOnlineLink() + "',price_sold=" + this.getSoldPrice() + ",product_condition=" + this.getCondition() + ",months_used=" + this.getMonths() + ",location='" + this.getLocation() + "' WHERE id=" + id);
+            }
             else
+            {
                 return false;
+            }
 
             //Confirm that product is, in fact, inserted into DB.
             ResultSet rs = st.executeQuery("SELECT * from product where id = "+id);
