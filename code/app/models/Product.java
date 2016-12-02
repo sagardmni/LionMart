@@ -228,4 +228,54 @@ public class Product {
         }
         return returnVal;
     }
+    public boolean updateProductInDatabase() throws ClassNotFoundException {
+        return updateProductInDatabase(false);
+    }
+
+    public boolean updateProductInDatabase(boolean isTest) throws ClassNotFoundException {
+        String myDriver = null;
+        String myURL = null;
+        Connection conn = null;
+        boolean returnVal = true;
+        if(isTest) {
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
+        }
+        else{
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+        }
+        try {
+            Class.forName(myDriver);
+            if(isTest)
+            {
+                conn = DriverManager.getConnection(myURL, "root", "");
+            }
+            else
+            {
+                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            }
+            Statement st = conn.createStatement();
+
+            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
+            //Check conditions before actually attempting to update into database
+            boolean shouldInsert = checkConditions();
+            if (shouldInsert)
+                st.executeUpdate("UPDATE product SET price="+this.getPrice()+",category='"+this.getCategory()+"',price_bought="+this.getPriceBought()+",description='"+this.getDescription()+"',date_upload='"+product_timestamp+"',online_link='"+this.getOnlineLink()+"',price_sold="+this.getSoldPrice()+",product_condition="+this.getCondition()+",months_used="+this.getMonths()+",location='"+this.getLocation()+"' WHERE id="+id);
+            else
+                return false;
+
+            //Confirm that product is, in fact, inserted into DB.
+            ResultSet rs = st.executeQuery("SELECT * from product where id = "+id);
+            if(!rs.next())
+                returnVal = false;
+            if(isTest)
+                st.executeUpdate("DROP TABLE product;");
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return returnVal;
+    }
 }

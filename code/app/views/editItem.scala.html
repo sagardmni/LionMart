@@ -44,7 +44,6 @@
                             window.location.replace(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
                         });
                     }
-
                 };
                 function gotoHome(){
                     var currentURL = window.location.href;
@@ -52,11 +51,13 @@
                     baseURL = parts[0] + "/";
                     window.location.replace(baseURL);
                 }
+
                 function logoutUser(){
                     FB.logout(function (response) {
                         gotoHome();
                     });
                 }
+
                 (function(d, s, id){
                     var js, fjs = d.getElementsByTagName(s)[0];
                     if (d.getElementById(id)) {return;}
@@ -72,12 +73,9 @@
         <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
         <h1 style="text-align:center">Edit Item</h1>
 
-        <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center">
+        <form method="POST" action="@routes.Application.processEditItemForm(product.getId())" style="text-align: center" enctype="multipart/form-data">
             <table align="center" style="width:40%">
                 <tbody>
-                    <tr>
-                        <td colspan="2"><input type="file" name="item_picture" accept="image/*" required></td>
-                    </tr>
                     <tr>
                         <td>Description:</td>
                         <td><textarea name="item_description" style="width:100%" rows="4" required>@product.getDescription()</textarea></td>

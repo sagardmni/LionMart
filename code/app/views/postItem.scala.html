@@ -147,7 +147,7 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-        <div id="div1">something</div>
+        <div id="div1"></div>
         <script type="text/javascript">
                 $("#predictPrice").click(function(){
                     var currentCategory = parseInt($('#item_category option:selected').val());
@@ -166,7 +166,7 @@
                     };
                     $.ajax({
                         type:  'POST',
-                        contentType: 'application/json',
+                        contentType: 'application/j`n',
                         dataType: 'json',
                         data: JSON.stringify(categoryJson),
                         url: "@routes.Application.predictPrice()",

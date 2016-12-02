@@ -90,25 +90,9 @@ public class Application extends Controller {
 
     public Result processEditItemForm(long productID) throws ClassNotFoundException {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
-        String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
-
-        try{
-            Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-            Statement st = conn.createStatement();
-//            ResultSet rs = st.executeUpdate("update product set ");
-//            int maxID = 0;
-//            if(rs.next()) {
-//                maxID = rs.getInt(1);
-//            }
-//            String imagePath = dynamicForm.get("item_picture");
-//            Product p = new Product(maxID+1,currentFbID,imagePath,Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
-//            p.addProductToDatabase();
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+        Date date = new Date();
+        Product p = new Product(productID,currentFbID,"chair.jpg",Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
+        p.updateProductInDatabase();
         return redirect(routes.Application.displayProducts(0,0));
     }
 
@@ -186,6 +170,8 @@ public class Application extends Controller {
 
 
 
+
+
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
         JsonNode x = request().body().asJson();
@@ -229,9 +215,6 @@ public class Application extends Controller {
         return redirect(routes.Application.displayProducts(0,0));
     }
 
-    public Result viewItem(){
-        return ok(viewItem.render());
-    }
 
     public Result editItem() throws ClassNotFoundException{
         DynamicForm dynamicForm = Form.form().bindFromRequest();
@@ -291,22 +274,6 @@ public class Application extends Controller {
 
     @Transactional
     public Result addUser(String fbID, String fbName, String fbEmail) throws ClassNotFoundException {
-//    <<<<<<<<<  SHIFTED TO CLASS >>>>>>
-//        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
-//        try {
-//            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-//            Statement st = conn.createStatement();
-//            st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
-//
-//            st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ fbID +"','"+ fname+"','"+lname+"','"+fbEmail+"')");
-//            conn.close();
-//            return redirect(routes.Application.displayProducts(0));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return redirect(routes.Application.main(0));
-//        }
         currentFbID = fbID;
         if(checkIfUserExists(fbID)){
             return redirect(routes.Application.displayProducts(0,0));
@@ -323,29 +290,7 @@ public class Application extends Controller {
         }
     }
 
-//    <<<<<<<<<  SHIFTED TO CLASS >>>>>>
-//    public boolean addProduct(Product p) throws ClassNotFoundException {
-//
-//
-//
-//        String myDriver = "com.mysql.jdbc.Driver";
-//        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
-//
-//        try {
-//            Class.forName(myDriver);
-//            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
-//            Statement st = conn.createStatement();
-//            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:00',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
-//            //TODO img path
-//            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(p.getDateUploaded().getTime());
-//            st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+p.getId()+",'"+p.getImagePath()+"',"+p.getPrice()+","+ p.getCategory()+","+p.getPriceBought()+",'"+p.getDescription()+"','"+product_timestamp+"','"+ p.getOnlineLink()+"',"+p.getSoldPrice()+","+p.getCondition()+","+p.getMonths()+",'"+p.getLocation()+"', '"+p.getUploadedBy()+"')");
-//            conn.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
-//    }
+
 
     public static boolean checkIfUserExists(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
