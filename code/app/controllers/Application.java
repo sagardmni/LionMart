@@ -1,43 +1,37 @@
 package controllers;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonPointer;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeCreator;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.ValueNode;
-import com.fasterxml.jackson.databind.util.RawValue;
-
-import models.Product;
-import models.User;
-import play.mvc.*;
-import play.db.jpa.*;
-import scala.util.parsing.json.JSONObject;
-import scala.util.parsing.json.JSONObject$;
-import views.html.*;
 
 import java.io.File;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+
+import models.Product;
+import models.User;
 import play.data.DynamicForm;
 import play.data.Form;
-
-import static java.lang.String.valueOf;
+import play.db.jpa.Transactional;
+import play.mvc.BodyParser;
+import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.Result;
+import views.html.contact;
+import views.html.editItem;
+import views.html.home;
+import views.html.main;
+import views.html.markSold;
+import views.html.postItem;
+import views.html.productLimit;
+import views.html.user;
 
 public class Application extends Controller {
 
@@ -115,11 +109,12 @@ public class Application extends Controller {
             if(rs.next()) {
                 maxID = rs.getInt(1);
             }
-            String fileName = null;
+            String fileName; // Static analysis improvement
             String contentType;
-            String fileNameSave = null;
+            String fileNameSave; // Static analysis improvement
+            fileNameSave = null;
             Http.MultipartFormData.FilePart picture = dynamicForm.getFile("item_picture");
-            File file = null;
+            File file; // Static analysis improvement
             if (picture != null) {
                 fileName = picture.getFilename();
                 contentType = picture.getContentType();
