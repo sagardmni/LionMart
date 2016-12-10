@@ -164,6 +164,7 @@ public class Application extends Controller {
 
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
+        System.out.println("Got here");
         JsonNode x = request().body().asJson();
         int category = x.get("category").intValue();
         int condition = x.get("condition").intValue();
@@ -188,8 +189,8 @@ public class Application extends Controller {
             }
             if (count!=0)
                 ratio/=count;
-            double roundOff = Math.round(ratio * 100.0) / 100.0;
-            predictedPrice = roundOff*originalPrice;
+            predictedPrice = ratio*originalPrice;
+            predictedPrice = Math.round(predictedPrice*100.0) / 100.0;
             conn.close();
             System.out.println(predictedPrice);
         } catch (SQLException e) {
