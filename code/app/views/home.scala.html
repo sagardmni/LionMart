@@ -123,12 +123,12 @@
 
         <div style="text-align:center">
             @if(pagenum != 0) {
-                <form method="GET" id="change-url-form2" name="change-url-form2" action="@routes.Application.displayProducts(1000)">
+                <form method="GET" id="change-url-form2" name="change-url-form2" action="#">
                     <input type='submit' style="width:200px" value='<-Previous' onclick="changeURL(-1)" />
                 </form>
             }
             @if(product_list.length == 20) {
-                <form method="GET" id="change-url-form" name="change-url-form" action="@routes.Application.displayProducts(1000)">
+                <form method="GET" id="change-url-form" name="change-url-form" action="#">
                     <input type='submit' style="width: 200px" value='Next->' onclick="changeURL(1)" />
                 </form>
             }
@@ -139,13 +139,13 @@
                     var currentURL = window.location.href;
                     var parts = currentURL.split('/');
                     var newURL= "";
-                    for(var iter=0;iter<parts.length-1;iter++){
+                    for(var iter=0;iter<parts.length-2;iter++){
                         newURL += parts[iter];
                         newURL += '/';
                     }
-                    var currentIndex = parts[parts.length - 1];
-                    currentIndex.split('?');
-                    newURL += (parseInt(currentIndex) + change).toString();
+                    var index = parts[parts.length-2];
+                    var category = parts[parts.length-1];
+                    newURL += (parseInt(index) + change).toString() + '/'+category;
                     if(change==1) {
                         document['change-url-form'].action = newURL;
                     }
