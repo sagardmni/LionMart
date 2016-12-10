@@ -24,7 +24,6 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import views.html.contact;
 import views.html.editItem;
 import views.html.home;
 import views.html.main;
@@ -68,10 +67,6 @@ public class Application extends Controller {
             e.printStackTrace();
         }
         return ok(main.render(displayList, category, pagenum));
-    }
-
-    public Result contactSeller() {
-        return ok(contact.render());
     }
 
     public Result postItem(){

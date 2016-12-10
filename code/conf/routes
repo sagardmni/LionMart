@@ -6,7 +6,6 @@
 GET     /                           controllers.Application.index()
 GET     /addUser                    controllers.Application.addUser(fbID:String, fbName:String, fbEmail:String)
 GET     /home/:pagenum              controllers.Application.displayProducts(pagenum: Int, category: Int ?= 0)
-POST    /contact                    controllers.Application.contactSeller()
 GET     /postItem                   controllers.Application.postItem()
 POST    /processItemForm            controllers.Application.processItemForm()
 POST    /user                       controllers.Application.processEditItemForm(productId: Long)
