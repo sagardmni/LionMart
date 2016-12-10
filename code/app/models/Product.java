@@ -25,6 +25,7 @@ public class Product {
     private int months;
     private int category;
     private String location;
+    private String paymentMethod;
 
     public Product() {
 
@@ -32,7 +33,7 @@ public class Product {
 
     public Product(long id, String uploadedBy, String imagePath, float price, String description,
                    Date dateUploaded, Date dateSold, float priceBought, String onlineLink,
-                   float soldPrice, int condition, int months, int category, String location) {
+                   float soldPrice, int condition, int months, int category, String location, String paymentMethod) {
         System.out.println("Got to product constructor");
         this.id = id;
         this.uploadedBy = uploadedBy;
@@ -48,6 +49,9 @@ public class Product {
         this.months = months;
         this.category = category;
         this.location = location;
+        if (paymentMethod == "")
+            this.paymentMethod = "Unspecified";
+        else this.paymentMethod = paymentMethod;
     }
 
     public long getId() {
@@ -75,6 +79,14 @@ public class Product {
         this.price = price;
     }
 
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -82,6 +94,7 @@ public class Product {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
     public Date getDateUploaded() {
         return dateUploaded;
@@ -213,7 +226,7 @@ public class Product {
             //Check conditions before actually attempting to insert into database
             boolean shouldInsert = checkConditions();
             if (shouldInsert)
-                st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"')");
+                st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id, payment_method) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"', '"+this.getPaymentMethod()+"')");
             else
                 return false;
             //Confirm that product is, in fact, inserted into DB.
@@ -260,7 +273,7 @@ public class Product {
             //Check conditions before actually attempting to insert into database
             boolean shouldInsert = checkConditions();
             if (shouldInsert)
-                st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"')");
+                st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id, payment_method) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"', '"+this.getPaymentMethod()+"')");
             else
                 return false;
             //Confirm that product is, in fact, inserted into DB.

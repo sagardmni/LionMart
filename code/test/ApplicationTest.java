@@ -71,7 +71,7 @@ public class ApplicationTest extends Application{
         try {
             Date d1 = new Date();
             Date d2 = new Date();
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd", "");
             assertTrue(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             int invalidPrice = 1000000;
-            Product p = new Product(1234,"123456789","defaultImagePath", invalidPrice,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", invalidPrice,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -97,7 +97,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             int invalidPriceBought = 1000000;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, invalidPriceBought,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, invalidPriceBought,"http://amazon.com", 11.00f,2,2,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -110,7 +110,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             String imagePath = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789",imagePath, 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789",imagePath, 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -123,7 +123,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             int invalidCondition = 6;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,invalidCondition,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,invalidCondition,2,2,"Mudd","");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             int invalidMonths = 5;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,invalidMonths,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,invalidMonths,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -149,7 +149,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             int invalidCategory = 5;
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,invalidCategory,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,invalidCategory,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -162,7 +162,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             String invalidDescription = new String(new char[65536]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,invalidDescription,d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,invalidDescription,d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -175,7 +175,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             String location = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,location);
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,location, "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -188,7 +188,7 @@ public class ApplicationTest extends Application{
             Date d1 = new Date();
             Date d2 = new Date();
             String invalidLink = new String(new char[256]).replace("\0", "a");
-            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,invalidLink, 11.00f,2,2,2,"Mudd");
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,invalidLink, 11.00f,2,2,2,"Mudd", "");
             assertFalse(p.addProductToDatabase(true));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -211,7 +211,7 @@ public class ApplicationTest extends Application{
         st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
 
         for(int i=0;i<=100;i++){
-            prodArray[i] = new Product(i,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", -1,2,2,2,"Mudd");
+            prodArray[i] = new Product(i,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", -1,2,2,2,"Mudd", "");
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(prodArray[i].getDateUploaded().getTime());
             st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+prodArray[i].getId()+",'"+prodArray[i].getImagePath()+"',"+prodArray[i].getPrice()+","+ prodArray[i].getCategory()+","+prodArray[i].getPriceBought()+",'"+prodArray[i].getDescription()+"','"+product_timestamp+"','"+ prodArray[i].getOnlineLink()+"',"+prodArray[i].getSoldPrice()+","+prodArray[i].getCondition()+","+prodArray[i].getMonths()+",'"+prodArray[i].getLocation()+"', '"+prodArray[i].getUploadedBy()+"')");
         }
@@ -265,7 +265,7 @@ public class ApplicationTest extends Application{
         p.setPriceBought(12.3f);
         p.setUploadedBy("akshay");
         p.setLocation("mudd");
-
+        p.setPaymentMethod("credit card");
         assertEquals(p.getLocation(),"mudd");
     }
 
@@ -273,9 +273,9 @@ public class ApplicationTest extends Application{
     public void checkProductValidUpdateTest() throws ClassNotFoundException {
         Date d1 = new Date();
         Date d2 = new Date();
-        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library");
+        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library", "");
         p.addProductToDatabase2(true);
-        Product q = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD");
+        Product q = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD", "");
         assertEquals(true, q.updateProductInDatabase(true));
     }
 
@@ -283,9 +283,9 @@ public class ApplicationTest extends Application{
     public void checkProductInvalidUpdateTest() throws ClassNotFoundException {
         Date d1 = new Date();
         Date d2 = new Date();
-        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library");
+        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library", "");
         p.addProductToDatabase2(true);
-        Product q = new Product(1234,"123456789","defaultImagePath", -12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD");
+        Product q = new Product(1234,"123456789","defaultImagePath", -12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD", "");
         assertEquals(false, q.updateProductInDatabase(true));
     }
 }

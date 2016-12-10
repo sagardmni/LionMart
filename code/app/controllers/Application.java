@@ -55,7 +55,7 @@ public class Application extends Controller {
             else
                 rs = st.executeQuery("SELECT * FROM product where category=" + category +" ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
             while(rs.next()){
-                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
                 displayList.add(obj);
             }
             conn.close();
@@ -80,7 +80,7 @@ public class Application extends Controller {
     public Result processEditItemForm(long productID) throws ClassNotFoundException {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         Date date = new Date();
-        Product p = new Product(productID,currentFbID,"chair.jpg",Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"));
+        Product p = new Product(productID,currentFbID,"chair.jpg",Float.valueOf(dynamicForm.get("price")),dynamicForm.get("item_description"),date,date, Float.valueOf(dynamicForm.get("original_price")),dynamicForm.get("item_link"), -1,Integer.parseInt(dynamicForm.get("item_condition")),Integer.parseInt(dynamicForm.get("item_months")),Integer.parseInt(dynamicForm.get("item_category")),dynamicForm.get("item_location"), "");
         p.updateProductInDatabase();
         return redirect(routes.Application.displayProducts(0,0));
     }
@@ -145,11 +145,13 @@ public class Application extends Controller {
             String[] itemCategoryArr = (String[])dynamicForm.asFormUrlEncoded().get("item_category");
             int itemCategory = Integer.parseInt(itemCategoryArr[0]);
 
+            String[] paymentMethod = (String[])dynamicForm.asFormUrlEncoded().get("payment_method");
+
             String[] priceArr = (String[])dynamicForm.asFormUrlEncoded().get("price");
             Float setPrice = Float.parseFloat(priceArr[0]);
             String[] oriPriceArr = (String[])dynamicForm.asFormUrlEncoded().get("original_price");
             Float oriPrice = Float.parseFloat(oriPriceArr[0]);
-            Product p = new Product(maxID+1,currentFbID,fileNameSave,setPrice,itemDescription[0],date,date, oriPrice,itemLink[0], -1, itemCondition, itemMonths, itemCategory,itemLocation[0]);
+            Product p = new Product(maxID+1,currentFbID,fileNameSave,setPrice,itemDescription[0],date,date, oriPrice,itemLink[0], -1, itemCondition, itemMonths, itemCategory,itemLocation[0], paymentMethod[0]);
             p.addProductToDatabase();
         }catch(Exception e)
         {
@@ -220,7 +222,7 @@ public class Application extends Controller {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
             ResultSet rs = st.executeQuery("SELECT * FROM product WHERE id="+ productID);
             if(rs.next()){
-                currentProduct = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+                currentProduct = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
             }
             conn.close();
             return ok(editItem.render(currentProduct));
@@ -252,7 +254,7 @@ public class Application extends Controller {
             rs = st.executeQuery("SELECT * FROM product WHERE user_id='"+ currentFbID+"' ORDER BY date_upload DESC");
 
             while(rs.next()){
-                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
                 userProductList.add(obj);
             }
             conn.close();
@@ -345,7 +347,7 @@ public class Application extends Controller {
             else
                 rs = st.executeQuery("SELECT * FROM product WHERE category=" +category+ " and user_id!='"+ currentFbID+"' ORDER BY date_upload DESC LIMIT 20 OFFSET "+Integer.toString(offset));
             while(rs.next()){
-                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"));
+                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
                 displayList.add(obj);
             }
             conn.close();
