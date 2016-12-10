@@ -190,7 +190,54 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
+            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
+        }
+        else{
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+        }
+        try {
+            Class.forName(myDriver);
+            if(isTest)
+            {
+                conn = DriverManager.getConnection(myURL, "root", "");
+            }
+            else
+            {
+                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            }
+            Statement st = conn.createStatement();
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+
+            java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
+            //Check conditions before actually attempting to insert into database
+            boolean shouldInsert = checkConditions();
+            if (shouldInsert)
+                st.executeUpdate("INSERT INTO product(id,imagepath, price, category, price_bought, description, date_upload,online_link,price_sold,product_condition,months_used,location,user_id) VALUES ("+this.getId()+",'"+this.getImagePath()+"',"+this.getPrice()+","+ this.getCategory()+","+this.getPriceBought()+",'"+this.getDescription()+"','"+product_timestamp+"','"+ this.getOnlineLink()+"',"+this.getSoldPrice()+","+this.getCondition()+","+this.getMonths()+",'"+this.getLocation()+"', '"+this.getUploadedBy()+"')");
+            else
+                return false;
+            //Confirm that product is, in fact, inserted into DB.
+            ResultSet rs = st.executeQuery("SELECT * from product where id = "+id);
+            if(!rs.next())
+                returnVal = false;
+            if(isTest)
+                st.executeUpdate("DROP TABLE product;");
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return returnVal;
+    }
+    // the below method is made for specific test cases and is not redundant.  DO NOT DELETE.
+    public boolean addProductToDatabase2(boolean isTest) throws ClassNotFoundException {
+        String myDriver = null;
+        String myURL = null;
+        Connection conn = null;
+        boolean returnVal = true;
+        if(isTest) {
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
@@ -220,8 +267,6 @@ public class Product {
             ResultSet rs = st.executeQuery("SELECT * from product where id = "+id);
             if(!rs.next())
                 returnVal = false;
-            if(isTest)
-                st.executeUpdate("DROP TABLE product;");
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -229,6 +274,7 @@ public class Product {
         }
         return returnVal;
     }
+
     public boolean updateProductInDatabase() throws ClassNotFoundException {
         return updateProductInDatabase(false);
     }
@@ -240,7 +286,7 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
+            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
@@ -257,23 +303,28 @@ public class Product {
                 conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             }
             Statement st = conn.createStatement();
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
 
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
             //Check conditions before actually attempting to update into database
             boolean shouldInsert = checkConditions();
 
             if (shouldInsert) {
+                System.out.println("shouldinsert is True!");
                 st.executeUpdate("UPDATE product SET price=" + this.getPrice() + ",category='" + this.getCategory() + "',price_bought=" + this.getPriceBought() + ",description='" + this.getDescription() + "',date_upload='" + product_timestamp + "',online_link='" + this.getOnlineLink() + "',price_sold=" + this.getSoldPrice() + ",product_condition=" + this.getCondition() + ",months_used=" + this.getMonths() + ",location='" + this.getLocation() + "' WHERE id=" + id);
             }
             else
             {
+                System.out.println("product upload check conditions failed");
                 return false;
             }
 
             //Confirm that product is, in fact, inserted into DB.
             ResultSet rs = st.executeQuery("SELECT * from product where id = "+id);
-            if(!rs.next())
+            if(!rs.next()){
+                System.out.println("updated product not found!");
                 returnVal = false;
+            }
             if(isTest)
                 st.executeUpdate("DROP TABLE product;");
             conn.close();
