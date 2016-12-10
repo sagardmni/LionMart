@@ -23,17 +23,15 @@ import org.junit.runners.MethodSorters;
 import org.junit.FixMethodOrder;
 
 /**
- *
- * Simple (JUnit) tests that can call all parts of a play app.
- * If you are interested in mocking a whole application, see the wiki for more details.
+ *  !!  IMPORTANT MESSAGE !!
+ *  PLEASE CHECK THE LOCAL DATABASE CONFIGURATIONS DURING TESTING. IT RUNS ON 3306 PORT IN MY PC.
+ *  - Akshay
  *
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApplicationTest extends Application{
     String myDriver;
     String myURL;
-    String name1;
-    float price1;
 
 
     @Test
@@ -228,5 +226,66 @@ public class ApplicationTest extends Application{
         st.executeUpdate("DROP TABLE product;");
         conn.close();
         assertTrue(limitReached);
+    }
+
+    @Test
+    public void checkUserConstructorEmail(){
+        User u = new User(123,"test","user","testuser@gmail.com");
+        assertEquals(u.getEmail(),"testuser@gmail.com");
+    }
+    @Test
+    public void checkUserConstructorName(){
+        User u = new User(123,"test","user","testuser@gmail.com");
+        String fullName = u.getFirstName()+u.getLastName();
+        assertEquals(fullName,"testuser");
+    }
+    @Test
+    public void checkUserConstructorFBId(){
+        User u = new User();
+        u.setFbId(123);
+        u.setEmail("testuser@gmail.com");
+        u.setFirstName("test");
+        u.setLastName("user");
+        assertEquals(u.getFbId(),123);
+    }
+
+    @Test
+    public void checkProductConstructor(){
+        Product p = new Product();
+        p.setCategory(1);
+        p.setCondition(1);
+        p.setId(200);
+        p.setImagePath("path");
+        p.setSoldPrice(12.3f);
+        p.setDescription("description");
+        p.setMonths(1);
+        Date d = new Date();
+        p.setDateUploaded(d);
+        p.setDateSold(d);
+        p.setPriceBought(12.3f);
+        p.setUploadedBy("akshay");
+        p.setLocation("mudd");
+
+        assertEquals(p.getLocation(),"mudd");
+    }
+
+    @Test
+    public void checkProductValidUpdateTest() throws ClassNotFoundException {
+        Date d1 = new Date();
+        Date d2 = new Date();
+        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library");
+        p.addProductToDatabase2(true);
+        Product q = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD");
+        assertEquals(true, q.updateProductInDatabase(true));
+    }
+
+    @Test
+    public void checkProductInvalidUpdateTest() throws ClassNotFoundException {
+        Date d1 = new Date();
+        Date d2 = new Date();
+        Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library");
+        p.addProductToDatabase2(true);
+        Product q = new Product(1234,"123456789","defaultImagePath", -12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"MUDD");
+        assertEquals(false, q.updateProductInDatabase(true));
     }
 }

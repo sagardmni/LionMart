@@ -75,7 +75,7 @@ public class User {
         String myURL = null;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost/mydatabase";
+            myURL = "jdbc:mysql://localhost:3306/mydatabase";
         }
         else
         {
