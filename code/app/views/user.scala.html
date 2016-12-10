@@ -73,6 +73,7 @@
         <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
         <h1 class="centerBoldText" onclick="gotoHome()">Go back to Home</h1>
         <br><br>
+        @if(user!=null) {
         <div style="text-align:center">
             <h1>@user.getFirstName @user.getLastName</h1>
             Email: @user.getEmail()
@@ -115,7 +116,7 @@
                 </tbody>
             </table>
         </div>
-
+        }
         <footer class="centerBoldText" style="font-size:20px">
             <p>LionMart</p>
         </footer>
