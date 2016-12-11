@@ -198,7 +198,7 @@ public class ApplicationTest extends Application{
     @Test
     public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost:3306/mydatabase";
+        myURL = "jdbc:mysql://localhost/mydatabase";
         int numRows = 0;
         ResultSet rs = null;
         boolean limitReached=false;
@@ -293,11 +293,10 @@ public class ApplicationTest extends Application{
     @Test
     public void checkPredictPrice() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
-        myURL = "jdbc:mysql://localhost:3306/mydatabase";
+        myURL = "jdbc:mysql://localhost/mydatabase";
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myURL, "root", "");
         Statement st = conn.createStatement();
-        st.executeUpdate("DROP TABLE product;");
         st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
         Date d1 = new Date();
         Date d2 = new Date();

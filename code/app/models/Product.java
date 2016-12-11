@@ -199,7 +199,7 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
+            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
@@ -246,7 +246,7 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
+            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
@@ -295,7 +295,7 @@ public class Product {
         boolean returnVal = true;
         if(isTest) {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://localhost:3306/mydatabase?zeroDateTimeBehavior=convertToNull";
+            myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
