@@ -12,7 +12,7 @@ POST    /user                       controllers.Application.processEditItemForm(
 GET     /user                       controllers.Application.showUser()
 GET     /editItem                   controllers.Application.editItem()
 GET     /markSold                   controllers.Application.markSold()
-POST    /processSoldItem            controllers.Application.processSoldItem()
+POST    /processSoldItem            controllers.Application.processSoldItem(productID : Long)
 GET     /productLimit               controllers.Application.displayProductLimitError()
 GET     /:pagenum/:category         controllers.Application.main(pagenum: Int, category: Int)
 POST    /postItem                   controllers.Application.predictPrice()

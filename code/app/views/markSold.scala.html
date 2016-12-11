@@ -1,3 +1,4 @@
+@(product: models.Product)
 <!DOCTYPE html>
 
 <html>
@@ -5,13 +6,11 @@
         <title>Lion Mart</title>
     </head>
     <h1 style="text-align:center">Mark Item Sold</h1>
-    <form method="POST" action="@routes.Application.processSoldItem()" style="text-align: center">
-<div style="text-align:center">
-Enter date sold: <input type="text" name="date_sold">
-<br><br>
-Enter price sold at: <input type="text" name="price_sold">
-</div>
-        <br><br>
+    <form method="POST" action="@routes.Application.processSoldItem(product.getId())" style="text-align: center">
+        <div style="text-align:center">
+        Enter price sold at: <input min="0" max="999999" type="number" id = "price_sold" name="price_sold">
+        </div>
+        <br>
         <input style="width:200px" type="submit" value="Mark Sold">
     </form>
 </html>

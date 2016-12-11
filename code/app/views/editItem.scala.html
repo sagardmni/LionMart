@@ -137,8 +137,8 @@
             <input type="submit" value="Submit" style="width:200px">
         </form>
         <div style="text-align:center">
-            <form action="/markSold" method="GET">
-                <input type="submit" value="Mark as Sold" style="width:200px"/>
+            <form method="GET" action="@routes.Application.markSold()">
+                <button id="@product.getId()" name="button" value="@product.getId()">Mark as Sold</button>
             </form>
         </div>
     </body>

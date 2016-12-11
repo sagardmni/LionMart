@@ -104,10 +104,6 @@ public class Product {
         this.dateUploaded = dateUploaded;
     }
 
-    public Date getDateSold() {
-        return dateSold;
-    }
-
     public void setDateSold(Date dateSold) {
         this.dateSold = dateSold;
     }
@@ -186,7 +182,7 @@ public class Product {
     public boolean checkConditions(){
         if(price > 999999 || price < 0 || imagePath.length()>100 || imagePath.length() == 0 || priceBought > 999999
                 || priceBought < 0 || description.length() == 0 || description.length() > 65535 ||
-            category > 4 || category < 1 || onlineLink.length() > 255 || condition > 5 || condition < 1 ||
+                category > 4 || category < 1 || onlineLink.length() > 255 || condition > 5 || condition < 1 ||
                 months > 4 || months < 1 || location.length()>255 || location.length() == 0)
             return false;
         return true;
@@ -220,7 +216,7 @@ public class Product {
                 conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             }
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
 
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
             //Check conditions before actually attempting to insert into database
@@ -267,7 +263,7 @@ public class Product {
                 conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             }
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
             //TODO img path
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
             //Check conditions before actually attempting to insert into database
@@ -316,7 +312,7 @@ public class Product {
                 conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
             }
             Statement st = conn.createStatement();
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
 
             java.sql.Timestamp product_timestamp = new java.sql.Timestamp(this.getDateUploaded().getTime());
             //Check conditions before actually attempting to update into database
