@@ -4,6 +4,7 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
         <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/style.css")' />
@@ -70,9 +71,9 @@
         <div id="fb-root"></div>
 
 
-        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
-        <h1 class="centerBoldText" onclick="gotoHome()">Go back to Home</h1>
-        <br><br>
+        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" class="btn btn-default" onclick="logoutUser();">
+        <button class="btn btn-info" onclick="gotoHome()">Go back to Home</button>
+        <br>
         @if(user!=null) {
         <div style="text-align:center">
             <h1>@user.getFirstName @user.getLastName</h1>
@@ -87,7 +88,7 @@
                         <div>
                             <tr>
                                 <td class="image" rowspan="5">
-                                    <img src='@routes.Assets.at("images/"+product.getImagePath())' alt="image">
+                                    <img src='@routes.Assets.at("images/"+product.getImagePath())' height="200" width="200" alt="image">
                                 </td>
                                 <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
                             </tr>

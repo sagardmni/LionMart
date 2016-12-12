@@ -12,6 +12,7 @@
 <html>
     <head>
         <title>Lion Mart</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <body>
@@ -73,8 +74,9 @@
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
         </script>
-        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" onclick="logoutUser();">
-        <h1 class="centerBoldText" onclick="gotoHome()">Go back to Home</h1>
+
+        <input  id="logoutButton" type="button" value="Logout" class="btn btn-default" style="display: none; float:right;" onclick="logoutUser();">
+        <button class="btn btn-info" onclick="gotoHome()">Go back to Home</button>
         <h1 style="text-align:center">Post Item</h1>
     <form method="POST" action="@routes.Application.processItemForm()" style="text-align: center" enctype="multipart/form-data">
         <table align="center" style="width:40%">

@@ -3,12 +3,23 @@
 
 <html>
     <head>
-        <title>Lion Mart</title>
+        <title>LionMart | Mark Item Sold</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
+    <script>
+        function gotoHome(){
+            var currentURL = window.location.href;
+            var parts = currentURL.split('/');
+            baseURL = parts[0] + "/home/0/0";
+            window.location.replace(baseURL);
+        }
+    </script>
+    <h3 onclick="gotoHome()">Go back to Home</h3>
     <h1 style="text-align:center">Mark Item Sold</h1>
     <form method="POST" action="@routes.Application.processSoldItem(product.getId())" style="text-align: center">
         <div style="text-align:center">
-        Enter price sold at: <input min="0" max="999999" type="number" id = "price_sold" name="price_sold">
+        Enter price sold at: <input min="0" max="999999" type="number" id = "price_sold" name="price_sold" required>
         </div>
         <br>
         <input style="width:200px" type="submit" value="Mark Sold">
