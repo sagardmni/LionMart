@@ -1,4 +1,4 @@
-@(userProductList: List[models.Product], user: models.User)
+@(userProductList: List[models.Product], userSoldProductList: List[models.Product], user: models.User)
 <!DOCTYPE html>
 
 <html>
@@ -12,17 +12,16 @@
     <body>
         <script>
                 var FB;
-                window.fbAsyncInit = function() {
+                window.fbAsyncInit = function () {
                     FB.init({
-                        appId      : '153128161818624',
-                        xfbml      : true,
-                        version    : 'v2.6'
+                        appId: '153128161818624',
+                        xfbml: true,
+                        version: 'v2.6'
                     });
-                    FB.Event.subscribe('auth.login', function()
-                    {
+                    FB.Event.subscribe('auth.login', function () {
                         window.location.reload();
                     });
-                    FB.getLoginStatus(function(response) {
+                    FB.getLoginStatus(function (response) {
                         if (response.status === 'connected') {
                             $("#logoutButton").show();
                         } else if (response.status === 'not_authorized') {
@@ -33,35 +32,38 @@
                             gotoHome();
                         }
                     });
-                    function getUserData(){
+                    function getUserData() {
 
-                        FB.api('/me', {fields: 'name,email'},function (response) {
+                        FB.api('/me', {fields: 'name,email'}, function (response) {
                             var fbID = response.id;
                             var fbName = response.name;
                             var fbEmail = response.email;
                             var baseURL = window.location.href;
                             var parts = baseURL.split('/');
                             console.log(parts[0]);
-                            console.log(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
-                            window.location.replace(parts[0]+"/addUser?fbID="+fbID+"&fbName="+fbName+"&fbEmail="+fbEmail);
+                            console.log(parts[0] + "/addUser?fbID=" + fbID + "&fbName=" + fbName + "&fbEmail=" + fbEmail);
+                            window.location.replace(parts[0] + "/addUser?fbID=" + fbID + "&fbName=" + fbName + "&fbEmail=" + fbEmail);
                         });
                     }
                 };
-                function gotoHome(){
+                function gotoHome() {
                     var currentURL = window.location.href;
                     var parts = currentURL.split('/');
                     baseURL = parts[0] + "/";
                     window.location.replace(baseURL);
                 }
-                function logoutUser(){
+                function logoutUser() {
                     FB.logout(function (response) {
                         gotoHome();
                     });
                 }
-                (function(d, s, id){
+                (function (d, s, id) {
                     var js, fjs = d.getElementsByTagName(s)[0];
-                    if (d.getElementById(id)) {return;}
-                    js = d.createElement(s); js.id = id;
+                    if (d.getElementById(id)) {
+                        return;
+                    }
+                    js = d.createElement(s);
+                    js.id = id;
                     js.src = "//connect.facebook.net/en_US/sdk.js";
                     fjs.parentNode.insertBefore(js, fjs);
                 }(document, 'script', 'facebook-jssdk'));
@@ -71,54 +73,100 @@
         <div id="fb-root"></div>
 
 
-        <input  id="logoutButton" type="button" value="Logout" style="display: none; float:right;" class="btn btn-default" onclick="logoutUser();">
+        <input id="logoutButton" type="button" value="Logout" style="display: none;
+            float: right;" class="btn btn-default" onclick="logoutUser();">
         <button class="btn btn-info" onclick="gotoHome()">Go back to Home</button>
         <br>
-        @if(user!=null) {
-        <div style="text-align:center">
-            <h1>@user.getFirstName @user.getLastName</h1>
-            Email: @user.getEmail()
-            <br><br>
-        </div>
-        <div style="border: 1px solid black">
-            <table align="center" style="width:40%">
-                <tbody>
-                @if(!userProductList.isEmpty){
-                    @for(product <- userProductList){
-                        <div>
+        @if(user != null) {
+            <div style="text-align: center">
+                <h1>@user.getFirstName @user.getLastName</h1>
+                Email: @user.getEmail()
+                <br><br>
+            </div>
+            <div style="border: 1px solid black">
+                <table align="center" style="width: 40%">
+                    <tbody>
+                    @if(!userProductList.isEmpty) {
+                        @for(product <- userProductList) {
+                            <div>
+                                <tr>
+                                    <td class="image" rowspan="5">
+                                        <a href="@product.getOnlineLink()" target="_blank">
+                                            <img src='@routes.Assets.at("images/" + product.getImagePath())' height="200" width="200" alt="image">
+                                        </a>
+                                    </td>
+                                    <td style="font-weight: bold;
+                                        font-size: 20px">@product.getDescription()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Pick up from: </b> @product.getLocation()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Used for: </b> @product.mapMonthsToString()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Condition rating: </b> @product.getCondition()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Price: </b> @product.getPrice()</td>
+                                </tr>
+                            </div>
                             <tr>
-                                <td class="image" rowspan="5">
-                                    <img src='@routes.Assets.at("images/"+product.getImagePath())' height="200" width="200" alt="image">
+                                <td>
+                                    <form method="GET" action="@routes.Application.editItem()">
+                                        <button id="@product.getId()" name="button" value="@product.getId()">Edit Item</button>
+                                    </form>
                                 </td>
-                                <td style="font-weight:bold;font-size:20px">@product.getDescription()</td>
                             </tr>
-                            <tr>
-                                <td><b>Pick up from: </b> @product.getLocation()</td>
-                            </tr>
-                            <tr>
-                                <td><b>Used for: </b> @product.mapMonthsToString()</td>
-                            </tr>
-                            <tr>
-                                <td><b>Condition rating: </b> @product.getCondition()</td>
-                            </tr>
-                            <tr>
-                                <td><b>Price: </b>@product.getPrice()</td>
-                            </tr>
-                        </div>
-                        <tr>
-                            <td>
-                                <form method="GET" action="@routes.Application.editItem()">
-                                    <button id="@product.getId()" name="button" value="@product.getId()">Edit Item</button>
-                                </form>
-                            </td>
-                        </tr>
+                        }
                     }
-                }
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="border: 1px solid black">
+                <table align="center" style="width: 40%">
+                    <tbody>
+                    @if(!userSoldProductList.isEmpty) {
+                        <h4 style="text-align: center;">Sold Items</h4>
+                        @for(product <- userSoldProductList) {
+                            <div>
+                                <tr>
+                                    <td class="image" rowspan="5">
+                                        <a href="@product.getOnlineLink()" target="_blank">
+                                            <img src='@routes.Assets.at("images/" + product.getImagePath())' height="200" width="200" alt="image">
+                                        </a>
+                                    </td>
+                                    <td style="font-weight: bold;
+                                        font-size: 20px">@product.getDescription()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Pick up from: </b> @product.getLocation()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Used for: </b> @product.mapMonthsToString()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Condition rating: </b> @product.getCondition()</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Price: </b> @product.getPrice()</td>
+                                </tr>
+                            </div>
+                            <tr>
+                                <td>
+                                    <form method="GET" action="@routes.Application.editItem()">
+                                        <button id="@product.getId()" name="button" value="@product.getId()">Edit Item</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
         }
-        <footer class="centerBoldText" style="font-size:20px">
+        <footer class="centerBoldText" style="font-size: 20px">
             <p>LionMart</p>
         </footer>
     </body>

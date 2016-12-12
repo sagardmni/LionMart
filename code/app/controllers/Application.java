@@ -267,6 +267,7 @@ public class Application extends Controller {
 
     public Result showUser() throws ClassNotFoundException {
         ArrayList<models.Product> userProductList = new ArrayList<models.Product>();
+        ArrayList<models.Product> userSoldProductList = new ArrayList<models.Product>();
         String myDriver = "com.mysql.jdbc.Driver";
         String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
         User thisUser = null;
@@ -286,8 +287,13 @@ public class Application extends Controller {
                 Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
                 userProductList.add(obj);
             }
+            rs = st.executeQuery("SELECT * FROM product WHERE price_sold != -1 AND user_id='"+ currentFbID+"' ORDER BY date_upload DESC");
+            while(rs.next()){
+                Product obj = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
+                userSoldProductList.add(obj);
+            }
             conn.close();
-            return ok(user.render(userProductList, thisUser));
+            return ok(user.render(userProductList,userSoldProductList, thisUser));
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

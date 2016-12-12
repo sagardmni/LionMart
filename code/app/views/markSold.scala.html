@@ -15,7 +15,7 @@
             window.location.replace(baseURL);
         }
     </script>
-    <h3 onclick="gotoHome()">Go back to Home</h3>
+    <button class="btn btn-info" onclick="gotoHome()">Go back to Home</button>
     <h1 style="text-align:center">Mark Item Sold</h1>
     <form method="POST" action="@routes.Application.processSoldItem(product.getId())" style="text-align: center">
         <div style="text-align:center">
