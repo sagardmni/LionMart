@@ -321,6 +321,32 @@ public class ApplicationTest extends Application{
         }
     }
 
+    @Test
+    public void testDBQuery() throws ClassNotFoundException {
+        try
+        {
+            Date d1 = new Date();
+            Date d2 = new Date();
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Mudd", "blah");
+            p.addProductToDatabase2(true);
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://localhost/mydatabase";
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "root", "");
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * from product where id=1234");
+            Product currentProduct = null;
+            if(rs.next())
+            {
+               currentProduct = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
+            }
+            assert(currentProduct.checkConditions());
+            st.executeUpdate("DROP TABLE product;");
+        } catch(SQLException e){
+            e.printStackTrace();
+            assert(false);
+        }
+    }
 
 
     @Test
