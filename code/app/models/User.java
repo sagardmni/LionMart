@@ -97,7 +97,14 @@ public class User {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
             boolean shouldInsert = checkUserConditions();
             if (shouldInsert)
-                st.executeUpdate("INSERT INTO user(id, fname, lname, email) VALUES ('"+ this.fbId +"','"+ this.firstName +"','"+ this.lastName +"','"+ this.email+"')");
+            {
+                PreparedStatement prepSt = conn.prepareStatement("INSERT INTO user(id, fname, lname, email) VALUES (?,?,?,?)");
+                prepSt.setString(1,Long.toString(this.fbId));
+                prepSt.setString(2,this.firstName);
+                prepSt.setString(3,this.lastName);
+                prepSt.setString(4,this.email);
+                prepSt.executeUpdate();
+            }
             else
                 return false;
             if(isTest)
