@@ -212,7 +212,15 @@ public class Application extends Controller {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
         Statement st = conn.createStatement();
-        st.executeUpdate("UPDATE product SET price_sold = "+price_sold+" WHERE id="+productID);
+        ResultSet rs = st.executeQuery("SELECT * FROM product WHERE id="+ productID);
+        Product currentProduct = null;
+        if(rs.next())
+        {
+            currentProduct = new Product(rs.getLong("id"),rs.getString("user_id"),rs.getString("imagepath"),rs.getFloat("price"),rs.getString("description"),rs.getDate("date_upload"),rs.getDate("date_sold"),  rs.getFloat("price_bought"),rs.getString("online_link"), rs.getFloat("price_sold"),rs.getInt("product_condition"),rs.getInt("months_used"),rs.getInt("category"),rs.getString("location"), rs.getString("payment_method"));
+            Date soldDate = new Date();
+            java.sql.Timestamp product_sold_timestamp = new java.sql.Timestamp(soldDate.getTime());
+            currentProduct.markAsSold(price_sold, product_sold_timestamp, false);
+        }
         return redirect(routes.Application.displayProducts(0,0));
     }
 

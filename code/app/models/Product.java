@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.sql.ResultSet;
 
@@ -34,7 +35,6 @@ public class Product {
     public Product(long id, String uploadedBy, String imagePath, float price, String description,
                    Date dateUploaded, Date dateSold, float priceBought, String onlineLink,
                    float soldPrice, int condition, int months, int category, String location, String paymentMethod) {
-        System.out.println("Got to product constructor");
         this.id = id;
         this.uploadedBy = uploadedBy;
         this.imagePath = imagePath;
@@ -286,6 +286,35 @@ public class Product {
 
     public boolean updateProductInDatabase() throws ClassNotFoundException {
         return updateProductInDatabase(false);
+    }
+
+    public boolean markAsSold(String price_sold, Timestamp product_sold_timestamp, boolean isTest) throws ClassNotFoundException{
+        try{
+            String myDriver = null;
+            String myURL = null;
+            if(isTest)
+            {
+                myDriver = "com.mysql.jdbc.Driver";
+                myURL = "jdbc:mysql://localhost/mydatabase?zeroDateTimeBehavior=convertToNull";
+            }
+            else
+            {
+                myDriver = "com.mysql.jdbc.Driver";
+                myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+            }
+            Class.forName(myDriver);
+            Connection conn = null;
+            if(isTest)
+                conn = DriverManager.getConnection(myURL, "root", "");
+            else
+                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Statement st = conn.createStatement();
+            st.executeUpdate("UPDATE product SET price_sold = "+price_sold+", date_sold='"+product_sold_timestamp+"' WHERE id="+Long.toString(id));
+        } catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public boolean updateProductInDatabase(boolean isTest) throws ClassNotFoundException {

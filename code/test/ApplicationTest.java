@@ -291,6 +291,39 @@ public class ApplicationTest extends Application{
     }
 
     @Test
+    public void validateMarkSold() throws ClassNotFoundException {
+        try
+        {
+            Date d1 = new Date();
+            Date d2 = new Date();
+            float soldPrice = 6;
+            Product p = new Product(1234,"123456789","defaultImagePath", 12.34f,"description",d1,d2, 25.00f,"http://amazon.com", 11.00f,2,2,2,"Library", "");
+            p.addProductToDatabase2(true);
+            Date soldDate = new Date();
+            java.sql.Timestamp product_sold_timestamp = new java.sql.Timestamp(soldDate.getTime());
+            p.markAsSold(Float.toString(soldPrice),product_sold_timestamp,true);
+            myDriver = "com.mysql.jdbc.Driver";
+            myURL = "jdbc:mysql://localhost/mydatabase";
+            Class.forName(myDriver);
+            Connection conn = DriverManager.getConnection(myURL, "root", "");
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * from product where id=1234");
+            float actualSoldPrice = 0;
+            if(rs.next())
+            {
+                actualSoldPrice = rs.getFloat("price_sold");
+            }
+            assertEquals(soldPrice, actualSoldPrice, 0);
+            st.executeUpdate("DROP TABLE product;");
+        } catch(SQLException e){
+            e.printStackTrace();
+            assert(false);
+        }
+    }
+
+
+
+    @Test
     public void checkPredictPrice() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
         myURL = "jdbc:mysql://localhost/mydatabase";
