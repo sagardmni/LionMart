@@ -8,12 +8,48 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     </head>
     <script>
+        var FB;
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '153128161818624',
+                xfbml      : true,
+                version    : 'v2.6'
+            });
+            FB.Event.subscribe('auth.login', function()
+            {
+                window.location.reload();
+            });
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+
+                } else if (response.status === 'not_authorized') {
+                    console.log("not authorized");
+                    gotoUnregisteredHome();
+                } else {
+                    console.log("not logged in");
+                    gotoUnregisteredHome();
+                }
+            });
+        };
         function gotoHome(){
             var currentURL = window.location.href;
             var parts = currentURL.split('/');
             baseURL = parts[0] + "/home/0/0";
             window.location.replace(baseURL);
         }
+        function gotoUnregisteredHome(){
+                    var currentURL = window.location.href;
+                    var parts = currentURL.split('/');
+                    baseURL = parts[0] + "/";
+                    window.location.replace(baseURL);
+                }
+                                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
     </script>
     <button class="btn btn-info" onclick="gotoHome()">Go back to Home</button>
     <h1 style="text-align:center">Mark Item Sold</h1>
