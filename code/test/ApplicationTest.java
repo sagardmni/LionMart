@@ -194,7 +194,7 @@ public class ApplicationTest extends Application{
             e.printStackTrace();
         }
     }
-
+//test comment
     @Test
     public void testCheckLimitForUser() throws ClassNotFoundException, SQLException {
         myDriver = "com.mysql.jdbc.Driver";
