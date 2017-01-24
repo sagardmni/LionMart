@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/akshaynagpal/LionMart.svg?token=SadtxEMzcJPSD4FuGaTx&branch=master)](https://travis-ci.com/akshaynagpal/LionMart)
-# ASE_project
+# LionMart
 
 LionMart is a project for COMS 4156 Advanced Software Engineering, Fall 2016, at Columbia University. It is a web application that allows users to post used items for sale and buy them by communicating through Facebook message, as well as provide price guidance for items.
 
