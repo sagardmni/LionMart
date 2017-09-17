@@ -80,7 +80,7 @@ public class User {
         else
         {
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+            myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         }
         try {
             Class.forName(myDriver);
@@ -91,7 +91,7 @@ public class User {
             }
             else
             {
-                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+                conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             }
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");

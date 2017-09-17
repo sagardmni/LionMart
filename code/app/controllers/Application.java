@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -32,6 +33,10 @@ import views.html.markSold;
 import views.html.postItem;
 import views.html.productLimit;
 import views.html.user;
+import java.util.*;
+import org.apache.commons.math3.stat.regression.OLSMultipleLinearRegression;
+import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.commons.math3.linear.RealMatrix;
 
 public class Application extends Controller {
 
@@ -43,10 +48,10 @@ public class Application extends Controller {
     public Result main(int pagenum, int category) {
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             int offset = pagenum*20;
             PreparedStatement prepSt = null;
@@ -98,12 +103,12 @@ public class Application extends Controller {
 
         Http.MultipartFormData dynamicForm = request().body().asMultipartFormData();
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
 
         try{
             Date date = new Date();
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery("select max(id) from product");
             int maxID = 0;
@@ -167,12 +172,26 @@ public class Application extends Controller {
     }
 
 
+public static int diff (java.sql.Timestamp t1, java.sql.Timestamp t2)
+{
+    int t1_date = t1.getDate();
+    int t2_date = t2.getDate();
+    return t2_date-t1_date;
+}
 
-
+    protected double[] xVector(double x) { // {1, x, x*x, x*x*x, ...}
+        int degree = 1;
+        double[] poly = new double[degree+1];
+        double xi=1;
+        for(int i=0; i<=degree; i++) {
+            poly[i]=xi;
+            xi*=x;
+        }
+        return poly;
+    }
 
     @BodyParser.Of(play.mvc.BodyParser.Json.class)
     public Result predictPrice() throws ClassNotFoundException{
-        System.out.println("Got here");
         JsonNode x = request().body().asJson();
         int category = x.get("category").intValue();
         int condition = x.get("condition").intValue();
@@ -180,26 +199,53 @@ public class Application extends Controller {
         int originalPrice = x.get("originalPrice").intValue();
         System.out.println(category+","+condition+","+months);
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
-        double ratio = 0;
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         double predictedPrice = 0;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             PreparedStatement prepSt = conn.prepareStatement("SELECT * FROM product WHERE category=? ORDER BY date_upload DESC LIMIT 5");
             prepSt.setInt(1,category);
             ResultSet rs = prepSt.executeQuery();
             int count = 0;
+            List<Float> priceBoughtList = new ArrayList<Float>();
+            List<Float> priceSoldList = new ArrayList<Float>();
+            List<Integer> conditionList = new ArrayList<Integer>(); 
             while(rs.next()){
-                float priceBought = rs.getFloat("price_bought");
                 float priceSold = rs.getFloat("price");
-                ratio += priceSold/priceBought;
-                count +=1;
+                if (priceSold !=0){
+                    float priceBought = rs.getFloat("price_bought");
+                    priceBoughtList.add(new Float(priceBought));
+                    priceSoldList.add(new Float(priceSold));
+                    conditionList.add(new Integer(rs.getInt("product_condition")));
+                }
             }
-            if (count!=0)
-                ratio/=count;
-            predictedPrice = ratio*originalPrice;
-            predictedPrice = Math.round(predictedPrice*100.0) / 100.0;
+
+            double[] x1 = new double[priceBoughtList.size()];
+            for (int i = 0; i < x1.length; i++) {
+                x1[i] = priceBoughtList.get(i);
+            }
+
+            double[] x2 = new double[conditionList.size()];
+            for (int i = 0; i < x2.length; i++) {
+                x2[i] = conditionList.get(i);
+            }
+
+            double[][] xs = new double[priceBoughtList.size()][2];
+            for (int i = 0; i < priceBoughtList.size(); i++){
+                xs[i][0] = priceBoughtList.get(i);
+                xs[i][1] = conditionList.get(i);
+            }
+            double[] ys = new double[priceSoldList.size()];
+            for (int i = 0; i < ys.length; i++) {
+                ys[i] = priceSoldList.get(i);
+            }
+            OLSMultipleLinearRegression ols = new OLSMultipleLinearRegression();
+            ols.setNoIntercept(false);
+            ols.newSampleData(ys, xs);
+            double param[] = ols.estimateRegressionParameters();
+            double[] new_x = {(double)originalPrice, (double)condition};
+            predictedPrice = param[0]+param[1]*new_x[0]+param[2]*new_x[1];
             conn.close();
             System.out.println(predictedPrice);
         } catch (SQLException e) {
@@ -215,9 +261,9 @@ public class Application extends Controller {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         String price_sold = dynamicForm.get("price_sold");
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         Class.forName(myDriver);
-        Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+        Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
         PreparedStatement prepSt = conn.prepareStatement("SELECT * FROM product WHERE id=?");
         prepSt.setLong(1,productID);
         ResultSet rs = prepSt.executeQuery();
@@ -237,11 +283,11 @@ public class Application extends Controller {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         int productID = Integer.parseInt(dynamicForm.get("button"));
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         Product currentProduct = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
             PreparedStatement prepSt = conn.prepareStatement("SELECT * FROM product WHERE id=?");
@@ -262,11 +308,11 @@ public class Application extends Controller {
         DynamicForm dynamicForm = Form.form().bindFromRequest();
         int productID = Integer.parseInt(dynamicForm.get("button"));
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         Product currentProduct = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
             PreparedStatement prepSt = conn.prepareStatement("SELECT * FROM product WHERE id=?");
@@ -288,11 +334,11 @@ public class Application extends Controller {
         ArrayList<models.Product> userProductList = new ArrayList<models.Product>();
         ArrayList<models.Product> userSoldProductList = new ArrayList<models.Product>();
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         User thisUser = null;
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             PreparedStatement prepSt = conn.prepareStatement("SELECT * FROM user WHERE id=?");
             prepSt.setString(1,currentFbID);
@@ -349,10 +395,10 @@ public class Application extends Controller {
 
     public static boolean checkIfUserExists(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS user (id VARCHAR(25) PRIMARY KEY, fname VARCHAR(30), lname VARCHAR(30), email VARCHAR(60))");
             PreparedStatement prepSt = conn.prepareStatement("SELECT COUNT(*) AS NOUSER FROM user WHERE id =?");
@@ -374,10 +420,10 @@ public class Application extends Controller {
 
     public static boolean checkLimitForUser(String id) throws ClassNotFoundException {
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             PreparedStatement prepSt = conn.prepareStatement("SELECT COUNT(*) from product WHERE user_id =? AND price_sold = -1");
             prepSt.setString(1,id);
@@ -399,10 +445,10 @@ public class Application extends Controller {
     public Result displayProducts(int pagenum, int category) throws ClassNotFoundException {
         ArrayList<Product> displayList = new ArrayList<Product>();
         String myDriver = "com.mysql.jdbc.Driver";
-        String myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+        String myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         try {
             Class.forName(myDriver);
-            Connection conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+            Connection conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             Statement st = conn.createStatement();
             int offset = pagenum*20;
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");

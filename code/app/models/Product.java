@@ -233,7 +233,7 @@ public class Product {
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+            myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         }
         try {
             Class.forName(myDriver);
@@ -243,7 +243,7 @@ public class Product {
             }
             else
             {
-                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+                conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             }
             Statement st = conn.createStatement();
             PreparedStatement prepSt = null;
@@ -280,7 +280,7 @@ public class Product {
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+            myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         }
         try {
             Class.forName(myDriver);
@@ -290,7 +290,7 @@ public class Product {
             }
             else
             {
-                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+                conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             }
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP DEFAULT '1970-01-01 00:00:01',online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
@@ -329,14 +329,14 @@ public class Product {
             else
             {
                 myDriver = "com.mysql.jdbc.Driver";
-                myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart?zeroDateTimeBehavior=convertToNull";
+                myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
             }
             Class.forName(myDriver);
             Connection conn = null;
             if(isTest)
                 conn = DriverManager.getConnection(myURL, "root", "");
             else
-                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+                conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             PreparedStatement prepSt = conn.prepareStatement("UPDATE product SET price_sold = ?, date_sold=? WHERE id=?");
             prepSt.setString(1,price_sold);
             prepSt.setTimestamp(2, product_sold_timestamp);
@@ -366,7 +366,7 @@ public class Product {
         }
         else{
             myDriver = "com.mysql.jdbc.Driver";
-            myURL = "jdbc:mysql://lionmart.cvkcqiaoutkr.us-east-1.rds.amazonaws.com:3306/lionmart";
+            myURL = "jdbc:mysql://localhost/database1?zeroDateTimeBehavior=convertToNull";
         }
         try {
             Class.forName(myDriver);
@@ -376,7 +376,7 @@ public class Product {
             }
             else
             {
-                conn = DriverManager.getConnection(myURL, "lionadmin", "lionlynx42");
+                conn = DriverManager.getConnection(myURL, "user1", "0Database!");
             }
             Statement st = conn.createStatement();
             st.executeUpdate("CREATE TABLE IF NOT EXISTS product (id INT PRIMARY KEY, price DECIMAL(8,2), imagepath VARCHAR(100),category INT NOT NULL,price_bought DECIMAL(8,2) NOT NULL,description TEXT NOT NULL,date_upload TIMESTAMP,date_sold TIMESTAMP,online_link VARCHAR(255),price_sold DECIMAL(8,2),product_condition TINYINT NOT NULL,months_used INT,location VARCHAR(255) NOT NULL, user_id VARCHAR(25) NOT NULL, payment_method VARCHAR(255))");
